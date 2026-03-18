@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RealSync Dynamics — The Creator OS</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --gold:#C9A84C;--gb:#F0C040;--cyan:#00F0FF;
+  --perp:#20B2AA;--perp2:#2DD4BF;
+  --comet:#7C6FFF;--comet2:#A78BFA;
+  --bg:#03050A;--s1:#0B0F18;--s2:#0F1520;--s3:#141C28;
+  --bd:rgba(201,168,76,.14);--bd2:rgba(255,255,255,.05);
+  --txt:#E4E6EF;--sub:#7A8498;--dim:#2A3348;
+  --NH:44px;--AB:26px;--TH:32px;
+}
+html,body{width:100%;height:100%;background:var(--bg);color:var(--txt);font-family:'Syne',sans-serif;overflow:hidden;}
+#bgc{position:fixed;inset:0;z-index:0;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.18}}
+@keyframes nIn{from{opacity:0;transform:translate(-50%,calc(-50% + 14px)) scale(.82)}to{opacity:1;transform:translate(-50%,-50%)}}
+@keyframes eIn{from{opacity:0;transform:translate(-50%,-50%) scale(.72)}to{opacity:1;transform:translate(-50%,-50%)}}
+@keyframes ai-pulse{0%{transform:translate(-50%,-50%) scale(1);opacity:.5}100%{transform:translate(-50%,-50%) scale(1.8);opacity:0}}
+@keyframes agtick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;height:var(--NH);z-index:700;display:flex;align-items:center;background:rgba(3,5,10,.97);border-bottom:1px solid var(--bd);backdrop-filter:blur(24px);}
+.logo{display:flex;align-items:center;gap:7px;padding:0 12px;height:100%;border-right:1px solid var(--bd);flex-shrink:0;text-decoration:none;min-width:150px;}
+.loz{width:16px;height:16px;border:1.5px solid var(--gold);transform:rotate(45deg);position:relative;flex-shrink:0;}
+.loz::after{content:'';position:absolute;inset:3px;background:var(--gb);box-shadow:0 0 7px var(--gb);}
+.logo-t{font-weight:800;font-size:11px;letter-spacing:.04em;white-space:nowrap;}
+.logo-t em{font-style:normal;color:var(--gold);}
+.pb-wrap{display:flex;align-items:stretch;border-right:1px solid var(--bd);flex-shrink:0;}
+.pbadge{display:flex;align-items:center;gap:5px;padding:0 9px;height:100%;cursor:pointer;text-decoration:none;transition:background .13s;border-right:1px solid var(--bd2);}
+.pbadge:last-child{border-right:none;}
+.pbadge:hover{background:rgba(255,255,255,.02);}
+.pb-d{width:4px;height:4px;border-radius:50%;animation:blink .8s ease infinite;}
+.pb-t{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;}
+.pp .pb-d{background:var(--perp2);box-shadow:0 0 5px var(--perp2);}
+.pp .pb-t{color:var(--perp2);}
+.pc .pb-d{background:var(--comet2);box-shadow:0 0 5px var(--comet2);}
+.pc .pb-t{color:var(--comet2);}
+.strip{display:flex;align-items:center;overflow-x:auto;flex:1;height:100%;scrollbar-width:none;padding:0 2px;}
+.strip::-webkit-scrollbar{display:none;}
+.nb{display:inline-flex;align-items:center;gap:3px;padding:0 8px;height:100%;font-family:'DM Mono',monospace;font-size:7.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--sub);background:transparent;border:none;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;text-decoration:none;transition:all .12s;flex-shrink:0;outline:none;}
+.nb:hover{color:var(--gold);border-bottom-color:rgba(201,168,76,.28);}
+.nb.open{color:var(--gb);border-bottom-color:var(--gb);background:rgba(201,168,76,.04);}
+.nb.hi{color:var(--gold);border:1px solid rgba(201,168,76,.35);border-bottom:2px solid var(--gold);margin:0 2px;padding:0 9px;}
+.nb.hi:hover,.nb.hi.open{background:rgba(201,168,76,.09);}
+.nb.lv{color:#00FF88;border-bottom-color:rgba(0,255,136,.25);}
+.nb.lv:hover,.nb.lv.open{border-bottom-color:#00FF88;}
+.arr{font-size:6px;opacity:.4;margin-left:1px;transition:transform .12s;}
+.nb.open .arr{transform:rotate(180deg);opacity:.9;}
+.vsep{width:1px;height:12px;background:var(--dim);flex-shrink:0;margin:0 1px;}
+.ldot{width:4px;height:4px;border-radius:50%;background:#00FF88;box-shadow:0 0 5px #00FF88;animation:blink 1s ease infinite;}
+.gdot{width:4px;height:4px;border-radius:50%;background:var(--gb);box-shadow:0 0 5px var(--gb);}
+.auth{display:flex;align-items:center;gap:4px;padding:0 10px;border-left:1px solid var(--bd);height:100%;flex-shrink:0;}
+.btn-lo{font-family:'DM Mono',monospace;font-size:7.5px;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border:1px solid var(--bd);color:var(--sub);background:transparent;cursor:pointer;text-decoration:none;transition:all .12s;}
+.btn-lo:hover{border-color:var(--gold);color:var(--gold);}
+.btn-sg{font-family:'DM Mono',monospace;font-size:7.5px;letter-spacing:.1em;text-transform:uppercase;padding:4px 12px;background:var(--gb);color:var(--bg);border:none;cursor:pointer;text-decoration:none;font-weight:700;transition:all .12s;}
+.btn-sg:hover{background:#fff;}
+
+/* ── AGENT BAR ── */
+.agbar{position:fixed;top:var(--NH);left:0;right:0;height:var(--AB);z-index:690;background:rgba(3,5,10,.96);border-bottom:1px solid rgba(45,212,191,.1);display:flex;align-items:center;overflow:hidden;}
+.abl{display:flex;align-items:center;gap:5px;padding:0 10px;border-right:1px solid rgba(45,212,191,.12);flex-shrink:0;height:100%;}
+.abl span{font-family:'DM Mono',monospace;font-size:6.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--perp2);white-space:nowrap;}
+.abl-d{width:4px;height:4px;border-radius:50%;background:var(--perp2);box-shadow:0 0 5px var(--perp2);animation:blink .6s ease infinite;}
+.ag-scroll{flex:1;overflow:hidden;display:flex;align-items:center;}
+.ag-inner{display:flex;animation:agtick 50s linear infinite;white-space:nowrap;}
+.agi{display:inline-flex;align-items:center;gap:7px;padding:0 16px;font-family:'DM Mono',monospace;font-size:7.5px;color:var(--sub);flex-shrink:0;}
+.agi-n{font-weight:600;}
+.agi-s{font-size:6.5px;letter-spacing:.08em;text-transform:uppercase;padding:1px 4px;border:1px solid;border-radius:1px;}
+.s-pri{border-color:var(--perp2);color:var(--perp2);}
+.s-par{border-color:var(--comet2);color:var(--comet2);}
+.s-fb{border-color:var(--dim);color:var(--dim);}
+.s-act{border-color:#00FF88;color:#00FF88;}
+.agi-sep{color:var(--dim);}
+
+/* ── MEGA ── */
+.mega{position:fixed;top:calc(var(--NH) + var(--AB));left:0;right:0;background:rgba(4,7,14,.98);border-bottom:1px solid var(--bd);backdrop-filter:blur(28px);z-index:680;max-height:0;overflow:hidden;transition:max-height .2s ease,opacity .16s;opacity:0;pointer-events:none;}
+.mega.open{max-height:520px;opacity:1;pointer-events:all;}
+.mw{max-width:1600px;margin:0 auto;padding:16px 22px 18px;}
+.mc-row{display:flex;gap:0;width:100%;}
+.mc{flex:1;border-right:1px solid var(--bd2);padding:0 15px;}
+.mc:first-child{padding-left:0;}
+.mc:last-child{border-right:none;padding-right:0;}
+.mch{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:5px;}
+.mi{display:flex;align-items:flex-start;gap:6px;padding:4px 5px;text-decoration:none;cursor:pointer;border:1px solid transparent;transition:all .11s;margin-bottom:1px;border-radius:2px;}
+.mi:hover{background:rgba(201,168,76,.04);border-color:rgba(201,168,76,.1);}
+.mi-ic{font-size:11px;flex-shrink:0;margin-top:1px;line-height:1;}
+.mi-b{flex:1;}
+.mi-t{font-size:9px;font-weight:700;color:var(--txt);display:block;margin-bottom:1px;transition:color .11s;}
+.mi:hover .mi-t{color:var(--gb);}
+.mi-d{font-family:'DM Mono',monospace;font-size:7px;color:var(--sub);line-height:1.4;display:block;}
+.bx{font-family:'DM Mono',monospace;font-size:6px;letter-spacing:.07em;text-transform:uppercase;padding:1px 4px;border:1px solid;border-radius:1px;margin-left:3px;}
+.bx-l{border-color:#00FF88;color:#00FF88;}.bx-n{border-color:var(--cyan);color:var(--cyan);}.bx-s{border-color:var(--gold);color:var(--gold);opacity:.7;}.bx-h{border-color:#FF6888;color:#FF6888;}.bx-p{border-color:var(--perp2);color:var(--perp2);}.bx-c{border-color:var(--comet2);color:var(--comet2);}
+.feat{padding:12px;margin-top:3px;border:1px solid;}
+.feat-g{background:linear-gradient(135deg,rgba(201,168,76,.07),rgba(0,240,255,.02));border-color:rgba(201,168,76,.2);}
+.feat-p{background:linear-gradient(135deg,rgba(32,178,170,.1),rgba(45,212,191,.03));border-color:rgba(45,212,191,.3);}
+.feat-c{background:linear-gradient(135deg,rgba(124,111,255,.1),rgba(167,139,250,.04));border-color:rgba(167,139,250,.3);}
+.ft{font-family:'DM Mono',monospace;font-size:6.5px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:4px;display:block;}
+.feat-g .ft{color:var(--gold);}
+.feat-p .ft{color:var(--perp2);}
+.feat-c .ft{color:var(--comet2);}
+.fn{font-size:12px;font-weight:800;margin-bottom:3px;}
+.fd{font-family:'DM Mono',monospace;font-size:7.5px;color:var(--sub);line-height:1.5;margin-bottom:8px;}
+.fb{display:inline-flex;align-items:center;font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.09em;text-transform:uppercase;padding:5px 10px;text-decoration:none;font-weight:700;transition:all .12s;cursor:pointer;border:none;}
+.fb-g{background:var(--gb);color:var(--bg);}
+.fb-p{background:var(--perp2);color:#000;}
+.fb-c{background:var(--comet2);color:#000;}
+.fb:hover{background:#fff;color:#000;}
+
+/* ── STAGE ── */
+.stage{position:fixed;top:calc(var(--NH) + var(--AB));bottom:var(--TH);left:0;right:0;display:flex;align-items:center;justify-content:center;z-index:1;}
+.hub{position:relative;}
+#hc{position:absolute;inset:0;z-index:1;pointer-events:none;}
+.ew{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:20;display:block;cursor:pointer;animation:eIn .6s cubic-bezier(.34,1.56,.64,1) both .03s;}
+.ei{border-radius:50%;display:flex;align-items:center;justify-content:center;transition:transform .35s cubic-bezier(.34,1.56,.64,1);}
+.ew:hover .ei{transform:scale(1.05);}
+.nd{position:absolute;transform:translate(-50%,-50%);z-index:10;animation:nIn .55s cubic-bezier(.34,1.56,.64,1) both;}
+.nd:nth-child(1){animation-delay:.05s}.nd:nth-child(2){animation-delay:.09s}.nd:nth-child(3){animation-delay:.13s}.nd:nth-child(4){animation-delay:.17s}.nd:nth-child(5){animation-delay:.21s}.nd:nth-child(6){animation-delay:.25s}.nd:nth-child(7){animation-delay:.29s}.nd:nth-child(8){animation-delay:.33s}.nd:nth-child(9){animation-delay:.37s}.nd:nth-child(10){animation-delay:.41s}.nd:nth-child(11){animation-delay:.45s}.nd:nth-child(12){animation-delay:.49s}
+.na{display:flex;flex-direction:column;align-items:center;gap:3px;text-decoration:none;cursor:pointer;outline:none;}
+.ns{position:relative;transition:all .3s cubic-bezier(.34,1.56,.64,1);}
+.na:hover .ns{transform:scale(1.18);filter:drop-shadow(0 0 14px var(--nc)) drop-shadow(0 0 28px var(--nc));}
+.nl{text-align:center;margin-top:2px;}
+.nn{font-size:8px;font-weight:800;color:var(--txt);display:block;white-space:nowrap;transition:color .16s;text-shadow:0 1px 4px #000;}
+.na:hover .nn{color:var(--nc);}
+.stg{font-family:'DM Mono',monospace;font-size:5px;letter-spacing:.1em;text-transform:uppercase;padding:1px 4px;border:1px solid;border-radius:1px;display:inline-flex;align-items:center;gap:2px;margin-top:1px;}
+.tl2{border-color:#00FF88;color:#00FF88;}.tb2{border-color:var(--cyan);color:var(--cyan);}
+.spd{width:2.5px;height:2.5px;border-radius:50%;background:currentColor;animation:blink 1.4s ease infinite;}
+.air{position:absolute;top:50%;left:50%;border-radius:50%;border:1px solid var(--nc,#F0C040);pointer-events:none;animation:ai-pulse 2.4s ease-out infinite;}
+
+/* ── APP MANAGER ── */
+.amb{position:fixed;inset:0;z-index:850;background:rgba(3,5,10,.9);backdrop-filter:blur(18px);opacity:0;pointer-events:none;transition:opacity .18s;}
+.amb.open{opacity:1;pointer-events:all;}
+.amw{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.94);z-index:860;width:min(980px,95vw);max-height:86vh;background:var(--s1);border:1px solid var(--bd);overflow:hidden;transition:transform .22s cubic-bezier(.34,1.56,.64,1),opacity .2s;opacity:0;display:flex;flex-direction:column;}
+.amb.open .amw{transform:translate(-50%,-50%) scale(1);opacity:1;}
+.am-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--bd);background:rgba(201,168,76,.02);flex-shrink:0;}
+.am-hl{display:flex;align-items:center;gap:10px;}
+.am-eye{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--gold);position:relative;flex-shrink:0;}
+.am-eye::after{content:'';position:absolute;inset:4px;background:var(--gb);border-radius:50%;box-shadow:0 0 7px var(--gb);}
+.am-ti{font-size:14px;font-weight:800;}
+.am-si{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.08em;margin-top:1px;color:var(--sub);}
+.am-si span{color:var(--perp2);}
+.am-si b{color:var(--comet2);}
+.am-close{width:26px;height:26px;border:1px solid var(--bd);background:transparent;color:var(--sub);cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;transition:all .12s;}
+.am-close:hover{border-color:var(--gold);color:var(--gold);}
+.am-body{display:grid;grid-template-columns:1fr 350px;flex:1;overflow:hidden;min-height:0;}
+.am-map{position:relative;overflow:hidden;border-right:1px solid var(--bd);}
+#amc{display:block;}
+.am-right{display:flex;flex-direction:column;overflow:hidden;}
+.am-tabs{display:flex;border-bottom:1px solid var(--bd);flex-shrink:0;}
+.amt{flex:1;padding:9px 0;font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.1em;text-transform:uppercase;color:var(--sub);background:transparent;border:none;cursor:pointer;transition:all .12s;border-bottom:2px solid transparent;}
+.amt:hover{color:var(--gold);}
+.amt.on{color:var(--gb);border-bottom-color:var(--gb);}
+.am-content{flex:1;overflow-y:auto;padding:12px;}
+.aml-item{display:flex;align-items:center;gap:7px;padding:6px 8px;border:1px solid transparent;transition:all .11s;margin-bottom:2px;cursor:pointer;}
+.aml-item:hover{border-color:var(--bd);background:rgba(255,255,255,.015);}
+.aml-item.sel{border-color:var(--nc,var(--gold));background:rgba(201,168,76,.03);}
+.aml-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.aml-n{font-size:9.5px;font-weight:700;flex:1;}
+.aml-ag{font-family:'DM Mono',monospace;font-size:6px;padding:1px 4px;border:1px solid;border-radius:1px;flex-shrink:0;}
+.aml-st{font-family:'DM Mono',monospace;font-size:6px;text-transform:uppercase;padding:1px 4px;border:1px solid;border-radius:1px;}
+.st-l{border-color:#00FF88;color:#00FF88;}
+.st-b{border-color:var(--cyan);color:var(--cyan);}
+.amd-nm{font-size:14px;font-weight:800;margin-bottom:2px;}
+.amd-sb{font-family:'DM Mono',monospace;font-size:7.5px;color:var(--sub);margin-bottom:8px;}
+.amd-dc{font-family:'DM Mono',monospace;font-size:8px;color:var(--sub);line-height:1.6;margin-bottom:10px;}
+.amd-ch{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+.conn-row{display:flex;align-items:center;gap:5px;padding:4px 7px;border:1px solid var(--bd2);margin-bottom:2px;font-family:'DM Mono',monospace;font-size:7.5px;}
+.conn-d{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.conn-ar{color:var(--gold);opacity:.6;}
+.amd-m{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:10px;}
+.amd-mv{background:var(--s2);border:1px solid var(--bd2);padding:8px;text-align:center;}
+.mv-v{font-size:14px;font-weight:800;color:var(--gb);display:block;line-height:1;}
+.mv-l{font-family:'DM Mono',monospace;font-size:6px;letter-spacing:.1em;text-transform:uppercase;color:var(--sub);display:block;margin-top:2px;}
+.am-btns{display:flex;gap:6px;}
+.am-launch{flex:1;background:var(--gb);color:var(--bg);border:none;font-family:'Syne',sans-serif;font-weight:700;font-size:10px;letter-spacing:.05em;text-transform:uppercase;padding:8px;cursor:pointer;text-decoration:none;text-align:center;transition:all .12s;}
+.am-launch:hover{background:#fff;}
+.am-launch2{padding:8px 12px;border:1px solid var(--bd);background:transparent;color:var(--sub);font-family:'DM Mono',monospace;font-size:7.5px;letter-spacing:.07em;text-transform:uppercase;cursor:pointer;transition:all .12s;}
+.am-launch2:hover{border-color:var(--gold);color:var(--gold);}
+.route-row{display:flex;align-items:center;gap:7px;padding:5px 7px;border-bottom:1px solid var(--bd2);font-family:'DM Mono',monospace;font-size:7.5px;}
+.rt-from{flex:1;color:var(--gold);}
+.rt-arr{color:var(--dim);}
+.rt-to{flex:1;text-align:right;color:var(--cyan);}
+.rt-d{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.rt-d.on{background:#00FF88;box-shadow:0 0 5px #00FF88;animation:blink .6s ease infinite;}
+.rt-d.off{background:var(--dim);}
+.st-row{display:flex;align-items:center;justify-content:space-between;padding:5px 7px;border-bottom:1px solid var(--bd2);}
+.st-l2{font-family:'DM Mono',monospace;font-size:7.5px;color:var(--sub);}
+.st-r{display:flex;align-items:center;gap:6px;}
+.st-bar{height:3px;background:var(--dim);border-radius:2px;overflow:hidden;width:56px;}
+.st-bf{height:100%;border-radius:2px;transition:width .6s ease;}
+.st-v{font-family:'DM Mono',monospace;font-size:7.5px;color:var(--txt);font-weight:600;}
+.agent-prio-block{margin-bottom:10px;}
+.apb-h{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:7px;padding-bottom:5px;border-bottom:1px solid var(--bd2);}
+.ag-prio-row{display:flex;align-items:center;gap:8px;padding:5px 7px;border:1px solid var(--bd2);margin-bottom:2px;transition:background .12s;}
+.ag-prio-row:hover{background:rgba(255,255,255,.015);}
+.ag-rank{font-family:'DM Mono',monospace;font-size:8px;font-weight:700;color:var(--dim);width:16px;flex-shrink:0;}
+.ag-pri-name{font-family:'DM Mono',monospace;font-size:9px;font-weight:600;flex:1;}
+.ag-pri-type{font-family:'DM Mono',monospace;font-size:6.5px;letter-spacing:.08em;text-transform:uppercase;padding:1px 5px;border:1px solid;border-radius:1px;}
+.ag-pri-desc{font-family:'DM Mono',monospace;font-size:7px;color:var(--sub);flex:2;}
+
+/* ── APP MODAL ── */
+.mbg{position:fixed;inset:0;z-index:900;display:flex;align-items:center;justify-content:center;background:rgba(3,5,10,.82);backdrop-filter:blur(14px);opacity:0;pointer-events:none;transition:opacity .18s;}
+.mbg.open{opacity:1;pointer-events:all;}
+.mo{background:var(--s1);border:1px solid var(--bd);width:min(440px,92vw);max-height:78vh;overflow-y:auto;transform:translateY(10px) scale(.97);transition:transform .2s cubic-bezier(.34,1.56,.64,1);}
+.mbg.open .mo{transform:none;}
+.moh{display:flex;align-items:flex-start;justify-content:space-between;padding:15px 16px 10px;border-bottom:1px solid var(--bd2);}
+.mot{font-size:14px;font-weight:800;margin-bottom:2px;}
+.mos{font-family:'DM Mono',monospace;font-size:7.5px;letter-spacing:.09em;color:var(--sub);text-transform:uppercase;}
+.moc{width:24px;height:24px;border:1px solid var(--bd);background:transparent;color:var(--sub);cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;transition:all .12s;}
+.moc:hover{border-color:var(--gold);color:var(--gold);}
+.mob{padding:12px 16px 16px;}
+.mm{background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.12);padding:8px 10px;margin-bottom:10px;}
+.mml{font-family:'DM Mono',monospace;font-size:6.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
+.mmi{display:flex;gap:4px;flex-wrap:wrap;}
+.mmit{font-family:'DM Mono',monospace;font-size:7px;color:var(--sub);border:1px solid var(--bd);padding:2px 6px;}
+.mde{font-family:'DM Mono',monospace;font-size:8.5px;line-height:1.65;color:var(--sub);margin-bottom:10px;}
+.mta{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:12px;}
+.mta span{font-family:'DM Mono',monospace;font-size:6.5px;letter-spacing:.07em;text-transform:uppercase;padding:2px 6px;border:1px solid var(--bd);color:var(--sub);}
+.mct{display:flex;align-items:center;justify-content:space-between;padding-top:9px;border-top:1px solid var(--bd2);}
+.mln{background:var(--gb);color:var(--bg);border:none;font-family:'Syne',sans-serif;font-weight:700;font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;padding:7px 15px;cursor:pointer;text-decoration:none;transition:all .12s;}
+.mln:hover{background:#fff;}
+.mst{font-family:'DM Mono',monospace;font-size:6.5px;letter-spacing:.1em;text-transform:uppercase;padding:3px 7px;border:1px solid;display:inline-flex;align-items:center;gap:3px;}
+.ms-l{border-color:#00FF88;color:#00FF88;}
+.ms-b{border-color:var(--cyan);color:var(--cyan);}
+
+/* ── SIDE PANEL ── */
+.pnl{position:fixed;top:calc(var(--NH) + var(--AB));right:0;bottom:var(--TH);width:min(380px,92vw);background:var(--s1);border-left:1px solid var(--bd);z-index:800;transform:translateX(100%);transition:transform .2s ease;overflow-y:auto;display:flex;flex-direction:column;}
+.pnl.open{transform:translateX(0);}
+.pnh{display:flex;align-items:flex-start;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--bd2);flex-shrink:0;}
+.pnt{font-size:13px;font-weight:800;}
+.pns{font-family:'DM Mono',monospace;font-size:7px;color:var(--sub);margin-top:2px;}
+.pnc{width:24px;height:24px;border:1px solid var(--bd);background:transparent;color:var(--sub);cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;transition:all .12s;}
+.pnc:hover{border-color:var(--gold);color:var(--gold);}
+.pnb{padding:12px 14px;flex:1;}
+.ps2{margin-bottom:13px;}
+.ps2-h{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:7px;padding-bottom:4px;border-bottom:1px solid var(--bd2);}
+.pl2{display:flex;align-items:center;justify-content:space-between;padding:6px 7px;text-decoration:none;font-family:'DM Mono',monospace;font-size:8.5px;color:var(--sub);border:1px solid transparent;transition:all .11s;margin-bottom:1px;cursor:pointer;}
+.pl2:hover{border-color:var(--bd);color:var(--txt);background:rgba(255,255,255,.015);}
+.pl2:hover .pla{opacity:1;color:var(--gold);}
+.pla{opacity:.22;font-size:9px;color:var(--gold);}
+.ib2{background:var(--s2);border:1px solid var(--bd2);padding:10px;margin-bottom:7px;}
+.ib2.pi{border-color:rgba(45,212,191,.2);background:rgba(32,178,170,.04);}
+.ib2.ci{border-color:rgba(167,139,250,.2);background:rgba(124,111,255,.04);}
+.ib2-l{font-family:'DM Mono',monospace;font-size:6.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;display:block;}
+.ib2.pi .ib2-l{color:var(--perp2);}
+.ib2.ci .ib2-l{color:var(--comet2);}
+.ib2-t{font-family:'DM Mono',monospace;font-size:8px;color:var(--sub);line-height:1.6;}
+.ib2-t strong{color:var(--txt);}
+.sg3{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:8px;}
+.sbox{background:var(--s2);border:1px solid var(--bd2);padding:8px;text-align:center;}
+.sbox.pi{border-color:rgba(45,212,191,.2);}
+.sbox.ci{border-color:rgba(167,139,250,.2);}
+.sv{font-size:15px;font-weight:800;color:var(--gb);display:block;line-height:1;}
+.sbox.pi .sv{color:var(--perp2);}
+.sbox.ci .sv{color:var(--comet2);}
+.sl{font-family:'DM Mono',monospace;font-size:6px;letter-spacing:.1em;text-transform:uppercase;color:var(--sub);display:block;margin-top:2px;}
+.pf2{display:flex;flex-direction:column;gap:5px;margin-bottom:8px;}
+.pf2 input,.pf2 textarea,.pf2 select{background:var(--s2);border:1px solid var(--bd2);color:var(--txt);font-family:'DM Mono',monospace;font-size:8px;padding:6px 8px;width:100%;outline:none;transition:border-color .12s;}
+.pf2 input:focus,.pf2 textarea:focus{border-color:rgba(201,168,76,.4);}
+.pf2 textarea{height:60px;resize:none;}
+.pf2 select option{background:var(--s1);}
+.pfb{background:var(--gb);color:var(--bg);border:none;font-family:'Syne',sans-serif;font-weight:700;font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;padding:8px;cursor:pointer;transition:all .12s;width:100%;}
+.pfb:hover{background:#fff;}
+.pfb.pi{background:var(--perp2);color:#000;}
+.pfb.ci{background:var(--comet2);color:#000;}
+.tline{display:flex;flex-direction:column;}
+.tli{display:flex;gap:8px;padding:6px 0;border-bottom:1px solid var(--bd2);}
+.tli:last-child{border-bottom:none;}
+.tld{width:7px;height:7px;border-radius:50%;border:1px solid var(--gold);flex-shrink:0;margin-top:3px;}
+.tld.done{background:var(--gold);}
+.tld.now{background:var(--gb);box-shadow:0 0 6px var(--gb);animation:blink .8s ease infinite;}
+.tl-t{font-size:9px;font-weight:700;color:var(--txt);margin-bottom:1px;}
+.tl-d{font-family:'DM Mono',monospace;font-size:7px;color:var(--sub);line-height:1.4;}
+.tl-dt{font-family:'DM Mono',monospace;font-size:6.5px;color:var(--gold);margin-bottom:1px;}
+.pc2{display:flex;flex-direction:column;gap:4px;margin-bottom:8px;}
+.pcard{border:1px solid var(--bd2);padding:8px 10px;background:var(--s2);}
+.pcard.hot{border-color:rgba(201,168,76,.35);background:rgba(201,168,76,.04);}
+.pcard-t{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);}
+.pcard-v{font-size:16px;font-weight:800;color:var(--txt);line-height:1.1;margin:2px 0;}
+.pcard-v span{font-size:8px;font-weight:400;color:var(--sub);}
+.pcard-f{font-family:'DM Mono',monospace;font-size:7px;color:var(--sub);line-height:1.6;}
+.soc-g{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:8px;}
+.soc{display:flex;align-items:center;gap:5px;padding:6px 8px;border:1px solid var(--bd2);text-decoration:none;transition:all .11s;color:var(--sub);}
+.soc:hover{border-color:var(--bd);color:var(--txt);background:rgba(255,255,255,.015);}
+.soc-i{font-size:12px;}
+.soc-n{font-family:'DM Mono',monospace;font-size:7.5px;text-transform:uppercase;letter-spacing:.06em;}
+
+/* ── TICKER ── */
+.ticker{position:fixed;bottom:0;left:0;right:0;height:var(--TH);z-index:700;background:rgba(3,5,10,.98);border-top:1px solid rgba(0,240,255,.08);display:flex;align-items:center;overflow:hidden;}
+.tl-wrap{display:flex;align-items:center;gap:5px;padding:0 10px;border-right:1px solid rgba(0,240,255,.08);flex-shrink:0;height:100%;}
+.tl-wrap span{font-family:'DM Mono',monospace;font-size:6.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);white-space:nowrap;}
+.tlw-d{width:4px;height:4px;border-radius:50%;background:var(--cyan);box-shadow:0 0 5px var(--cyan);animation:blink 1s ease infinite;}
+.ttrack{flex:1;overflow:hidden;display:flex;align-items:center;}
+.tsc{display:flex;animation:tick 75s linear infinite;white-space:nowrap;}
+.ti{display:inline-flex;align-items:center;gap:7px;padding:0 18px;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.04em;color:var(--sub);flex-shrink:0;}
+.tt{color:var(--gold);font-size:6px;letter-spacing:.1em;text-transform:uppercase;border:1px solid rgba(201,168,76,.2);padding:1px 4px;}
+.tv{color:var(--cyan);}
+.ts{color:var(--dim);}
+.perf{display:flex;align-items:center;gap:8px;padding:0 10px;border-left:1px solid rgba(0,240,255,.08);flex-shrink:0;}
+.pm{display:flex;align-items:center;gap:3px;}
+.pml{font-family:'DM Mono',monospace;font-size:6px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);white-space:nowrap;}
+.pmv{font-family:'DM Mono',monospace;font-size:7px;color:var(--cyan);white-space:nowrap;}
+.pmd{width:3px;height:3px;border-radius:50%;background:#00FF88;box-shadow:0 0 4px #00FF88;animation:blink .8s ease infinite;}
+</style>
+</head>
+<body>
+<canvas id="bgc"></canvas>
+<!-- NAV -->
+<nav id="mainNav">
+  <a class="logo" href="https://realsyncdynamics.de"><div class="loz"></div><div class="logo-t">RealSync<em>Dynamics</em></div></a>
+  <div class="pb-wrap">
+    <a class="pbadge pp" href="#" onclick="openP('perplexity');return false;"><span class="pb-d"></span><span class="pb-t">⬡ Perplexity AI</span></a>
+    <a class="pbadge pc" href="#" onclick="openP('comet');return false;"><span class="pb-d"></span><span class="pb-t">◉ Comet Browser</span></a>
+  </div>
+  <div class="strip" id="strip"></div>
+  <div class="auth">
+    <a class="btn-lo" href="#" onclick="openP('login');return false;">Login</a>
+    <a class="btn-sg" href="#" onclick="openP('register');return false;">Start →</a>
+  </div>
+</nav>
+<div class="mega" id="mega"><div class="mw"><div class="mc-row" id="megaCols"></div></div></div>
+
+<!-- AGENT BAR -->
+<div class="agbar">
+  <div class="abl"><div class="abl-d"></div><span>Agent-Status</span></div>
+  <div class="ag-scroll"><div class="ag-inner" id="agInner"></div></div>
+</div>
+
+<!-- APP MANAGER -->
+<div class="amb" id="amb" onclick="if(event.target===this)closeAmgr()">
+  <div class="amw">
+    <div class="am-head">
+      <div class="am-hl">
+        <div class="am-eye"></div>
+        <div>
+          <div class="am-ti">RealSync App Manager</div>
+          <div class="am-si"><span>⬡ Perplexity AI Primary</span> · <b>◉ Comet Partner</b> · 12 Apps · Stargate Core</div>
+        </div>
+      </div>
+      <button class="am-close" onclick="closeAmgr()">✕</button>
+    </div>
+    <div class="am-body">
+      <div class="am-map"><canvas id="amc"></canvas></div>
+      <div class="am-right">
+        <div class="am-tabs">
+          <button class="amt on" onclick="setAmTab('apps',this)">Apps</button>
+          <button class="amt" onclick="setAmTab('agents',this)">Agenten</button>
+          <button class="amt" onclick="setAmTab('routing',this)">Routing</button>
+          <button class="amt" onclick="setAmTab('stats',this)">Stats</button>
+        </div>
+        <div class="am-content" id="amContent"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- APP MODAL -->
+<div class="mbg" id="appModal" onclick="if(event.target===this)closeM()">
+  <div class="mo">
+    <div class="moh"><div><div class="mot" id="moT"></div><div class="mos" id="moS"></div></div><button class="moc" onclick="closeM()">✕</button></div>
+    <div class="mob">
+      <div class="mm" id="mMrg" style="display:none"><div class="mml">// Zusammengeführt aus</div><div class="mmi" id="mMI"></div></div>
+      <p class="mde" id="moD"></p>
+      <div class="mta" id="moTa"></div>
+      <div class="mct"><a class="mln" id="moL" href="#" target="_blank">App öffnen →</a><div class="mst" id="moSt"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SIDE PANEL -->
+<div class="pnl" id="pnl">
+  <div class="pnh"><div><div class="pnt" id="pnT"></div><div class="pns" id="pnS"></div></div><button class="pnc" onclick="closeP()">✕</button></div>
+  <div class="pnb" id="pnB"></div>
+</div>
+
+<!-- STAGE -->
+<div class="stage"><div class="hub" id="hub">
+  <canvas id="hc"></canvas>
+  <div class="ew" id="eyeBtn" onclick="openAmgr()"><div class="ei" id="ei"><canvas id="ec"></canvas></div></div>
+</div></div>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="tl-wrap"><div class="tlw-d"></div><span>Live</span></div>
+  <div class="ttrack"><div class="tsc" id="tsc"></div></div>
+  <div class="perf">
+    <div class="pm"><div class="pmd"></div><span class="pml">Uptime</span><span class="pmv" id="pUp">99.96%</span></div>
+    <div class="pm"><span class="pml">Apps</span><span class="pmv">12</span></div>
+    <div class="pm"><span class="pml">Wettbewerb</span><span class="pmv" id="pCo">847/1000</span></div>
+    <div class="pm"><span class="pml">Perplexity</span><span class="pmv" style="color:var(--perp2)">PRIMARY</span></div>
+    <div class="pm"><span class="pml">Comet</span><span class="pmv" style="color:var(--comet2)">PARTNER</span></div>
+  </div>
+</div>
+<script>
+/* ════════════════════════════════════════════════════════
+   PERPLEXITY-FIRST AGENT ROUTING SYSTEM
+   Priority: Perplexity AI → Comet Browser → Gemini → Mistral → Llama → DeepSeek
+════════════════════════════════════════════════════════ */
+const AGENTS = [
+  {id:'perplexity', name:'Perplexity AI',   tier:'PRIMARY',  color:'#2DD4BF', status:'active',  load:92, tasks:['Search','Reasoning','Compute','Deploy','Scale'],   desc:'Primärer Compute-Agent. Verarbeitet alle kritischen Tasks. €0 Infrastruktur für alle 12 Apps.'},
+  {id:'comet',      name:'Comet Browser',   tier:'PARTNER',  color:'#A78BFA', status:'active',  load:78, tasks:['Browse','Research','Scrape','Monitor','Automate'], desc:'Browser-Automation Partner. Web-Research, Creator-Monitoring, Content-Scraping, Web-Automation.'},
+  {id:'gemini',     name:'Gemini Pro',       tier:'FALLBACK', color:'#60D0FF', status:'standby', load:12, tasks:['Vision','Code','Long-Context'],                    desc:'Fallback für Vision-Tasks und Long-Context. Wird aktiviert wenn Perplexity überlastet.'},
+  {id:'mistral',    name:'Mistral 7B',       tier:'FALLBACK', color:'#80FFC0', status:'standby', load:5,  tasks:['DE-Sprache','DACH-Copy','Lokalisierung'],           desc:'Fallback für deutschsprachige Tasks und DACH-Lokalisierung.'},
+  {id:'llama',      name:'Llama 3.1 70B',    tier:'FALLBACK', color:'#FFA040', status:'standby', load:3,  tasks:['Code','Open-Source','Fine-Tune'],                   desc:'Open-Source Fallback für Code-Generation und Fine-Tuning.'},
+  {id:'deepseek',   name:'DeepSeek R1',      tier:'FALLBACK', color:'#FF6888', status:'standby', load:2,  tasks:['Reasoning','Math','Analysis'],                     desc:'Letzter Fallback für komplexe Reasoning-Tasks.'},
+  {id:'claude',     name:'Claude Sonnet',    tier:'FALLBACK', color:'#FFD700', status:'standby', load:8,  tasks:['Writing','Ethics','Safety'],                       desc:'Fallback für kreatives Writing und Safety-Checks.'},
+];
+
+const ROUTING_RULES = [
+  {task:'Alle Standard-Tasks',       primary:'Perplexity AI',  fallback:'Gemini Pro'},
+  {task:'Web-Research & Browse',     primary:'Comet Browser',  fallback:'Perplexity AI'},
+  {task:'Creator-Monitoring',        primary:'Comet Browser',  fallback:'Perplexity AI'},
+  {task:'Ad-Generation (DACH)',      primary:'Perplexity AI',  fallback:'Mistral 7B'},
+  {task:'Code & App-Deployment',     primary:'Perplexity AI',  fallback:'Llama 3.1 70B'},
+  {task:'Deepfake Detection',        primary:'Perplexity AI',  fallback:'Gemini Pro'},
+  {task:'Lernpfad-Generation',       primary:'Perplexity AI',  fallback:'Claude Sonnet'},
+  {task:'Content-Analyse',           primary:'Perplexity AI',  fallback:'Comet Browser'},
+  {task:'Marktanalyse',              primary:'Comet Browser',  fallback:'Perplexity AI'},
+  {task:'Agenten-Routing',           primary:'Perplexity AI',  fallback:'Comet Browser'},
+  {task:'Sicherheits-Audit',         primary:'Perplexity AI',  fallback:'Claude Sonnet'},
+  {task:'Writing & Copy',            primary:'Perplexity AI',  fallback:'Claude Sonnet'},
+];
+
+/* ════════════════════════════════════════════════════════
+   12 APPS
+════════════════════════════════════════════════════════ */
+const APPS = [
+  {id:0,  n:'CreatorSeal', c:'#F0C040', url:'https://realsyncdynamics.de/creatorseal', s:'live',
+   sub:'Flagship · C2PA 2.3 · Blockchain · Deepfake AI',
+   agent:'Perplexity AI', agentColor:'#2DD4BF', m:null,
+   desc:'Ed25519-Signaturen, SHA-256 Hash-Chains, C2PA 2.3, Blockchain-Anchoring und Deepfake-Detection (98%) in einem Trust Score. Creator Page, QR-Code, gerichtstaugliche Urheberschaftsbelege. Perplexity AI verarbeitet alle Verifikations-Tasks.',
+   tags:['C2PA 2.3','Ed25519','SHA-256','Blockchain','Deepfake 98%','Trust Score','QR-System','EU AI Act'],
+   connections:[1,2,4,9], metrics:[{v:'98%',l:'Deepfake'},{v:'C2PA',l:'2.3'},{v:'€0',l:'Einstieg'},{v:'Live',l:'Status'}]},
+
+  {id:1,  n:'AdEngine',    c:'#FF6888', url:'https://realsyncdynamics.de/ad-engine',    s:'beta',
+   sub:'Campaigns + Link-Magic · 7 Kanäle · KI-Ads',
+   agent:'Perplexity AI', agentColor:'#2DD4BF', m:['Campaigns','Link-Magic'],
+   desc:'KI-Ad-Generation + Kampagnen-Management. URL → fertige Ads für 7 Kanäle. A/B-Testing, Budget-Tracking. Perplexity generiert Creatives, Comet Browser researcht Zielgruppen-Trends.',
+   tags:['KI-Ads','Multi-Channel','A/B-Testing','Budget','DACH-first','7 Kanäle'],
+   connections:[2,4,10], metrics:[{v:'7',l:'Kanäle'},{v:'KI',l:'Generation'},{v:'DACH',l:'First'},{v:'A/B',l:'Testing'}]},
+
+  {id:2,  n:'DataCore',    c:'#00F0FF', url:'https://realsyncdynamics.de/datacore',     s:'live',
+   sub:'Analytics + MarketScanner · Echtzeit-BI',
+   agent:'Comet Browser', agentColor:'#A78BFA', m:['Analytics','MarketScanner'],
+   desc:'Creator-BI + Marktanalyse in Echtzeit. Comet Browser scrapt Marktdaten live, Perplexity AI analysiert Trends. Revenue, QR-Scans, Trust Score, Bullish/Bearish-Indikatoren.',
+   tags:['Echtzeit-Dashboard','Marktanalyse','Bullish/Bearish','Revenue','KPI-Export','Comet-Powered'],
+   connections:[0,1,5,6], metrics:[{v:'∞',l:'KPIs'},{v:'Live',l:'Echtzeit'},{v:'BI',l:'Intelligence'},{v:'API',l:'Export'}]},
+
+  {id:3,  n:'AutoOS',      c:'#C080FF', url:'https://realsyncdynamics.de/auto-os',      s:'live',
+   sub:'KI-Agenten + AppBuilder · Automation · Perplexity-First',
+   agent:'Perplexity AI', agentColor:'#2DD4BF', m:['Agenten','AppBuilder'],
+   desc:'KI-Agenten-Hub + No-Code-AppBuilder. Perplexity AI als primärer Routing-Agent. 12 Agenten verwalten, Routing überwachen. Apps aus 6 Templates bauen und auf Vercel deployen.',
+   tags:['KI-Agenten','Routing','No-Code','Vercel-Deploy','Perplexity-First','Automation'],
+   connections:[6,9,10,11], metrics:[{v:'12',l:'Agenten'},{v:'6',l:'Templates'},{v:'Auto',l:'Deploy'},{v:'€0',l:'Infra'}]},
+
+  {id:4,  n:'SocialHub',   c:'#80FFC0', url:'https://realsyncdynamics.de/social-hub',   s:'live',
+   sub:'Community + SozialNetzwerk · EU · DSGVO',
+   agent:'Comet Browser', agentColor:'#A78BFA', m:['SozialNetzwerk','Community'],
+   desc:'Europas erstes DSGVO-by-Design Creator-Netzwerk. Comet Browser automatisiert Social-Media-Monitoring. Auto-Posting für 5 Plattformen, E2E-Verschlüsselung.',
+   tags:['DSGVO','Auto-Posting','E2E','EU-Server','Creator-first','Comet-Monitoring'],
+   connections:[0,1,8], metrics:[{v:'5',l:'Plattformen'},{v:'E2E',l:'Encrypted'},{v:'EU',l:'Server'},{v:'DSGVO',l:'Compliant'}]},
+
+  {id:5,  n:'EduLab',      c:'#FFE060', url:'https://realsyncdynamics.de/edu-lab',      s:'beta',
+   sub:'SchulLabor + Bildung · DACH · B2B',
+   agent:'Perplexity AI', agentColor:'#2DD4BF', m:['SchulLabor','Bildung'],
+   desc:'Science-Lab-Simulatoren + KI-Lernpfade. Perplexity generiert personalisierte Lernpfade. Physik/Chemie/Bio browserbasiert. B2B-Schullizenzen, Bundesland-Verträge.',
+   tags:['Simulatoren','Physik/Chemie/Bio','DACH-Lehrplan','KI-Lernpfade','B2B-Lizenzen'],
+   connections:[2,6,9], metrics:[{v:'3',l:'Fächer'},{v:'B2B',l:'Lizenzen'},{v:'0',l:'Download'},{v:'DACH',l:'Lehrplan'}]},
+
+  {id:6,  n:'Optimus',     c:'#60D0FF', url:'https://realsyncdynamics.de/optimus',      s:'live',
+   sub:'9 KI-Modelle · Perplexity-First · Model-Router',
+   agent:'Perplexity AI', agentColor:'#2DD4BF', m:null,
+   desc:'Multi-KI-Chat mit Perplexity als primärem Modell. Claude, Gemini, Comet als weitere Optionen. 9 Modelle von 6 Providern — kostenlos dank Perplexity AI Compute.',
+   tags:['Perplexity-First','Claude','Gemini','Comet','9 Modelle','Model-Router'],
+   connections:[3,5,2,11], metrics:[{v:'9',l:'Modelle'},{v:'Perp',l:'Primary'},{v:'€0',l:'Kosten'},{v:'Grid',l:'View'}]},
+
+  {id:7,  n:'Handwerk',    c:'#FFA040', url:'https://realsyncdynamics.de/handwerk',     s:'live',
+   sub:'HandwerkOS · Thüringen · 10 Tools · Lokal',
+   agent:'Perplexity AI', agentColor:'#2DD4BF', m:null,
+   desc:'Auftragsmanagement, Kundenverwaltung, Rechnungen. 10 Tools: Wasserwaage, Betonrechner, Flächenrechner, Kabelquerschnitt, Stundensatzrechner. Perplexity AI unterstützt Preisschätzungen.',
+   tags:['Auftragsmanagement','Rechnungen','Betonrechner','Wasserwaage','Thüringen','10 Tools'],
+   connections:[9,2], metrics:[{v:'10',l:'Tools'},{v:'Local',l:'First'},{v:'RE',l:'Rechnungen'},{v:'CRM',l:'Kunden'}]},
+
+  {id:8,  n:'Wettbewerb',  c:'#FFD700', url:'https://realsyncdynamics.de/wettbewerb',   s:'live',
+   sub:'1000 Gratis-Plätze · Early Adopters · 847/1000',
+   agent:'Perplexity AI', agentColor:'#2DD4BF', m:null,
+   desc:'1000 Early-Access-Plätze. 847 vergeben. Leaderboard, Referral-Tracking, permanente Pro-Features. Perplexity AI verwaltet das Ranking-System automatisch.',
+   tags:['1000 Plätze','Early Access','Referral','Leaderboard','Pro-Features','Kostenlos'],
+   connections:[4,0,9], metrics:[{v:'847',l:'Vergeben'},{v:'153',l:'Frei'},{v:'Pro',l:'Features'},{v:'€0',l:'Kosten'}]},
+
+  {id:9,  n:'Sicherheit',  c:'#40FFA0', url:'https://realsyncdynamics.de/sicherheit',   s:'live',
+   sub:'Stripe · 2FA · DSGVO · Compliance · Auth',
+   agent:'Perplexity AI', agentColor:'#2DD4BF', m:null,
+   desc:'Zentrale Security + Payment-Infrastruktur. Stripe, 2FA, DSGVO-konforme Datensicherheit. Perplexity AI führt automatische Sicherheits-Audits durch.',
+   tags:['Stripe','2FA','DSGVO','Audit-Logs','API-Keys','Enterprise-SLA','Perplexity-Audit'],
+   connections:[0,3,7,8,11], metrics:[{v:'2FA',l:'Auth'},{v:'€0',l:'Breach'},{v:'SLA',l:'99.9%'},{v:'Stripe',l:'Payments'}]},
+
+  {id:10, n:'FlowSync',    c:'#A78BFA', url:'https://realsyncdynamics.de/flowsync',     s:'beta',
+   sub:'Creator Workspace · Datenbanken · Zapier-like',
+   agent:'Comet Browser', agentColor:'#A78BFA', m:null,
+   desc:'Creator-Workspace trifft smarte Datenbanken. Notion-Style Docs, Airtable-Views, Zapier-Automations zwischen allen 12 RealSync-Apps. Comet Browser fetcht externe Daten automatisch.',
+   tags:['Notion-Style','Datenbanken','Automation','Multi-View','Workflows','Comet-Powered'],
+   connections:[0,1,2,3,4,6,9], metrics:[{v:'∞',l:'Datenbanken'},{v:'Auto',l:'Workflows'},{v:'Views',l:'Multi'},{v:'API',l:'Zapier-like'}]},
+
+  {id:11, n:'Gate',        c:'#F0C040', url:'https://realsyncdynamics.de/gate',          s:'live',
+   sub:'Stargate Hub · App Manager · Creator OS Core',
+   agent:'Perplexity AI', agentColor:'#2DD4BF', m:null,
+   desc:'Das Stargate — zentraler App Manager für das gesamte RealSync-Ökosystem. Visualisiert alle 12 Apps im Orbit. Steuert Agenten-Routing via Perplexity AI. Comet Browser als Browser-Agent integriert.',
+   tags:['Platform Hub','Perplexity-First','Comet-Partner','12 Apps','Orbit-Visualizer','App-Manager'],
+   connections:[0,1,2,3,4,5,6,7,8,9,10], metrics:[{v:'12',l:'Apps'},{v:'2',l:'Primär-Agents'},{v:'€0',l:'Infra'},{v:'24/7',l:'Deploy'}]},
+];
+
+const INTER_APP_ROUTES = [
+  {from:'CreatorSeal', to:'DataCore',   label:'Verifizierungs-Daten',  agent:'Perplexity AI', on:true},
+  {from:'CreatorSeal', to:'SocialHub',  label:'Creator-Profil Sync',    agent:'Perplexity AI', on:true},
+  {from:'Optimus',     to:'AutoOS',     label:'KI-Agenten-Routing',     agent:'Perplexity AI', on:true},
+  {from:'Comet',       to:'DataCore',   label:'Marktdaten-Scraping',    agent:'Comet Browser', on:true},
+  {from:'Comet',       to:'SocialHub',  label:'Social-Monitoring',      agent:'Comet Browser', on:true},
+  {from:'DataCore',    to:'AdEngine',   label:'Performance-Daten',      agent:'Perplexity AI', on:true},
+  {from:'AdEngine',    to:'SocialHub',  label:'Post-Automation',        agent:'Perplexity AI', on:true},
+  {from:'AutoOS',      to:'Gate',       label:'Platform-Routing',       agent:'Perplexity AI', on:true},
+  {from:'FlowSync',    to:'DataCore',   label:'Database-Sync',          agent:'Comet Browser', on:true},
+  {from:'EduLab',      to:'DataCore',   label:'Lern-Analytics',         agent:'Perplexity AI', on:false},
+  {from:'Handwerk',    to:'Sicherheit', label:'Stripe-Payments',        agent:'Perplexity AI', on:true},
+  {from:'Wettbewerb',  to:'SocialHub',  label:'Referral-Tracking',      agent:'Perplexity AI', on:true},
+  {from:'Sicherheit',  to:'Gate',       label:'Auth-Status',            agent:'Perplexity AI', on:true},
+];
+
+/* ════════════════════════════════════════════════════════
+   NAV DATA
+════════════════════════════════════════════════════════ */
+const NAV = [
+  {id:'partner', label:'Kooperationen', cols:[
+    {h:'Perplexity AI', i:'⬡', items:[
+      {i:'🧠',t:'Perplexity AI — Primary Agent',d:'Compute · Deploy · Scale · €0 Infrastruktur für alle 12 Apps',bx:'p',p:'perplexity'},
+      {i:'🚀',t:'Perplexity-First Routing',d:'Alle kritischen Tasks laufen primär über Perplexity AI.',bx:'l',p:'routing_info'},
+      {i:'📈',t:'Skalierungsstrategie',d:'Von 12 auf 50+ Apps via Perplexity Computer.',bx:'',p:'perp_scale'},
+    ]},
+    {h:'Comet Browser', i:'◉', items:[
+      {i:'🌐',t:'Comet Browser — Partner Agent',d:'Browser-Automation · Web-Research · Creator-Monitoring',bx:'c',p:'comet'},
+      {i:'🔍',t:'Web-Research Automation',d:'Comet scrapt Marktdaten und Trends in Echtzeit.',bx:'l',p:'comet_research'},
+      {i:'📡',t:'Social-Media-Monitoring',d:'Comet überwacht Creator-Aktivität auf allen Plattformen.',bx:'n',p:'comet_social'},
+    ]},
+    {h:'Tech-Partner', i:'🔌', items:[
+      {i:'⛓',t:'Polygon Network',d:'Blockchain-Anchoring für CreatorSeal.',bx:'l',p:'p_polygon'},
+      {i:'💳',t:'Stripe',d:'Payment-Infrastruktur aller Apps.',bx:'l',p:'p_stripe'},
+      {i:'🗄',t:'Supabase',d:'Auth, Database, Realtime.',bx:'l',p:'p_supabase'},
+      {i:'🌐',t:'Vercel',d:'Edge-Deployment via Perplexity AI.',bx:'l',p:'p_vercel'},
+    ]},
+    {feat:true, cls:'pf', tag:'Primary Agent · Aktiv', title:'Perplexity AI', desc:'Alle 12 Apps kostenlos deployed. Perplexity-First Routing für alle kritischen Tasks. €0 GPU.', btn:'Partnerschaft ansehen', cls_btn:'fb-p', p:'perplexity'},
+  ]},
+  {id:'marketing', label:'Marketing', cols:[
+    {h:'Werbekampagnen', i:'📣', items:[
+      {i:'🎯',t:'Kampagne starten',d:'7 Kanäle via AdEngine + Comet Research.',bx:'l',p:'kampagne'},
+      {i:'🤖',t:'KI-Ad-Generation',d:'Perplexity AI generiert Creatives, Comet researcht Trends.',bx:'l',p:'ki_ads'},
+      {i:'📸',t:'Screenshot-Aktion',d:'Post → 3 Monate Silver gratis.',bx:'h',p:'screenshot'},
+    ]},
+    {h:'Social Media', i:'📱', items:[
+      {i:'📸',t:'Instagram',d:'@realsyncdynamics',bx:'l',url:'https://instagram.com'},
+      {i:'🎵',t:'TikTok',d:'@realsyncdynamics',bx:'l',url:'https://tiktok.com'},
+      {i:'🐦',t:'X / Twitter',d:'Tech-Updates',bx:'l',url:'https://twitter.com'},
+      {i:'💼',t:'LinkedIn',d:'B2B-Content',bx:'l',url:'https://linkedin.com'},
+      {i:'▶',t:'YouTube',d:'Tutorials',bx:'',url:'https://youtube.com'},
+      {i:'🔴',t:'Reddit',d:'Community',bx:'',url:'https://reddit.com'},
+    ]},
+    {h:'Promotions', i:'🎁', items:[
+      {i:'🏆',t:'Wettbewerb 1000',d:'847/1000 vergeben.',bx:'h',p:'wett_join'},
+      {i:'💰',t:'Affiliate 30%',d:'Monatliche Provision.',bx:'',p:'affiliate'},
+      {i:'🎫',t:'Vouchers',d:'Creator- und Bildungs-Rabatte.',bx:'',p:'vouchers'},
+    ]},
+    {feat:true, cls:'', tag:'Aktion · Aktiv', title:'Screenshot-Aktion', desc:'Screenshot → posten → @realsyncdynamics taggen → 3 Monate Silver gratis.', btn:'Jetzt mitmachen', cls_btn:'fb-g', p:'screenshot'},
+  ]},
+  {id:'b2b', label:'B2B', cols:[
+    {h:'Enterprise', i:'🏢', items:[
+      {i:'💼',t:'Enterprise-Pakete',d:'White-Label, Team, Custom-Integration.',bx:'',p:'enterprise'},
+      {i:'🎨',t:'White-Label',d:'RealSync unter deinem Brand — Platinum.',bx:'',p:'whitelabel'},
+      {i:'⚙',t:'Custom Integration',d:'API-first, Webhooks, Perplexity AI.',bx:'',p:'custom_int'},
+    ]},
+    {h:'Partnerprogramm', i:'🌟', items:[
+      {i:'💰',t:'Affiliate 30%',d:'Monatliche Provision.',bx:'h',p:'affiliate'},
+      {i:'🔄',t:'Reseller',d:'RealSync weiterverkaufen.',bx:'',p:'reseller'},
+      {i:'🛠',t:'Integration-Partner',d:'Offizieller Tech-Partner.',bx:'',p:'int_partner'},
+    ]},
+    {h:'FlowSync', i:'🔄', items:[
+      {i:'⚡',t:'FlowSync Automations',d:'Verbinde alle 12 Apps. Comet-powered.',bx:'n',p:'flowsync_info'},
+      {i:'📋',t:'Datenbanken & Views',d:'Notion-Stil Creator-Workspace.',bx:'n',p:'flowsync_db'},
+    ]},
+    {feat:true, cls:'', tag:'Affiliate · 30%', title:'Partner werden', desc:'30% monatlich, automatisch, unbegrenzt. Tracking via Perplexity AI Dashboard.', btn:'Jetzt bewerben', cls_btn:'fb-g', p:'affiliate'},
+  ]},
+  {id:'roadmap', label:'Roadmap', cols:[
+    {h:'Q1 2026', i:'🎯', items:[
+      {i:'✓',t:'12 Apps deployed',d:'Perplexity AI + Comet als Partner.',bx:'l',p:'rm_apps'},
+      {i:'✓',t:'FlowSync Beta',d:'Creator-Workspace mit Comet live.',bx:'n',p:'flowsync_info'},
+      {i:'🔄',t:'App Manager Gate',d:'Stargate mit Perplexity-Routing.',bx:'n',p:'rm_gate'},
+    ]},
+    {h:'Q2–Q4 2026', i:'🚀', items:[
+      {i:'⏳',t:'DigitalTwin / HDT',d:'Human Digital Twin.',bx:'s',p:'rm_hdt'},
+      {i:'⏳',t:'DACH Expansion',d:'AT, CH — lokalisiert via Perplexity.',bx:'s',p:'rm_dach'},
+      {i:'⏳',t:'Comet Deep-Integration',d:'Comet Browser in alle Apps.',bx:'c',p:'comet_deep'},
+      {i:'⏳',t:'50+ Apps',d:'Perplexity Computer skaliert autonom.',bx:'s',p:'rm_scale'},
+    ]},
+    {h:'Vision 2027', i:'🌐', items:[
+      {i:'📋',t:'Enterprise White-Label',d:'Vollständiges Branding.',bx:'s',p:'rm_wl'},
+      {i:'🌍',t:'EU-Expansion',d:'FR, ES, PL — via Perplexity.',bx:'s',p:'rm_eu'},
+      {i:'🤖',t:'Creator OS 1.0',d:'EU-Führung mit Perplexity + Comet.',bx:'s',p:'rm_os'},
+    ]},
+    {feat:true, cls:'pf', tag:'Vision · 2027', title:'The Creator OS', desc:'100k Creator, 50+ Apps — alle via Perplexity AI deployed, Comet Browser als Web-Agent.', btn:'Roadmap öffnen', cls_btn:'fb-p', p:'roadmap_full'},
+  ]},
+  {id:'support', label:'Support', lv:true, cols:[
+    {h:'Direkter Support', i:'🛟', items:[
+      {i:'💬',t:'Live Chat',d:'Mo–Fr 9–18 Uhr.',bx:'l',p:'live_chat'},
+      {i:'📧',t:'E-Mail',d:'support@realsyncdynamics.de',bx:'',p:'email_sup'},
+      {i:'📞',t:'Video-Call',d:'30-Min Demo.',bx:'',p:'video_call'},
+    ]},
+    {h:'Ressourcen', i:'📚', items:[
+      {i:'📖',t:'Dokumentation',d:'Vollständige Doku.',bx:'',p:'docs'},
+      {i:'❓',t:'FAQ',d:'Häufige Fragen.',bx:'',p:'faq'},
+      {i:'📊',t:'Status Page',d:'Echtzeit-Status.',bx:'',p:'status'},
+      {i:'📰',t:'Newsletter',d:'Platform-Updates.',bx:'',p:'newsletter'},
+    ]},
+    {h:'Community', i:'👥', items:[
+      {i:'💬',t:'Community Forum',d:'Fragen, Tipps, Showcase.',bx:'',p:'community'},
+      {i:'📣',t:'Discord',d:'Echtzeit-Chat.',bx:'s',p:'discord'},
+    ]},
+    {feat:true, cls:'', tag:'Live · Mo–Fr 9–18', title:'Live Chat', desc:'Kein Bot. Direkter Chat. Perplexity AI analysiert deine Anfrage vorab.', btn:'Chat starten', cls_btn:'fb-g', url:'mailto:support@realsyncdynamics.de'},
+  ]},
+  {id:'company', label:'Unternehmen', cols:[
+    {h:'Über uns', i:'🏢', items:[
+      {i:'📖',t:'Firmengeschichte',d:'Von Bubble.io zu 12 Apps + 2 KI-Partnern.',bx:'',p:'history'},
+      {i:'👤',t:'Team & Gründer',d:'Dominik Steiner · Thüringen.',bx:'',p:'team'},
+      {i:'🌱',t:'Klimaeffizienz',d:'€0 GPU via Perplexity + Comet.',bx:'',p:'klima'},
+    ]},
+    {h:'Karriere', i:'💼', items:[
+      {i:'👨‍💻',t:'Next.js Developer',d:'Remote · Vollzeit',bx:'h',p:'job_njs'},
+      {i:'🤖',t:'KI / ML Engineer',d:'Remote · Agenten',bx:'h',p:'job_ml'},
+      {i:'✉',t:'Initiativbewerbung',d:'',bx:'',p:'job_init'},
+    ]},
+    {h:'Rechtliches', i:'⚖', items:[
+      {i:'📄',t:'Impressum',d:'§ 5 TMG',bx:'',p:'impressum'},
+      {i:'🔒',t:'Datenschutz',d:'DSGVO-konform.',bx:'',p:'datenschutz'},
+      {i:'📋',t:'AGB',d:'Nutzungsbedingungen.',bx:'',p:'agb'},
+      {i:'🛡',t:'DSA',d:'Digital Services Act.',bx:'',p:'dsa'},
+    ]},
+    {feat:true, cls:'', tag:'Made in Germany', title:'Über RealSync', desc:'12 Apps, Perplexity AI Primary, Comet Browser Partner. Alles Open Source. Thüringen.', btn:'Unsere Geschichte', cls_btn:'fb-g', p:'history'},
+  ]},
+  {id:'wettbewerb', label:'Wettbewerb', hi:true, cols:[
+    {h:'1000 Gratis-Plätze', i:'🏆', items:[
+      {i:'🎯',t:'Platz sichern',d:'847/1000 vergeben. 153 frei.',bx:'h',p:'wett_join'},
+      {i:'📊',t:'Live-Leaderboard',d:'Perplexity AI rankt automatisch.',bx:'l',p:'leaderboard'},
+      {i:'🎁',t:'Early Adopter',d:'Permanente Pro-Features.',bx:'',p:'ea_vorteile'},
+    ]},
+    {feat:true, cls:'', tag:'847/1000 · 153 frei', title:'Platz sichern', desc:'Permanente Pro-Features ohne Ablaufdatum. Perplexity AI verwaltet Ranking. Kostenlos.', btn:'Jetzt beitreten', cls_btn:'fb-g', p:'wett_join'},
+  ]},
+];
+
+/* ════════════════════════════════════════════════════════
+   PANEL CONTENT
+════════════════════════════════════════════════════════ */
+function getPC(key) {
+  const m = {
+    perplexity: {t:'Perplexity AI',s:'Primary Agent · Strategischer Partner',h:`
+      <div class="ib2 pi"><span class="ib2-l">Primary Agent</span><p class="ib2-t">Perplexity AI ist der <strong>primäre Compute-Agent</strong> für alle 12 Apps. Alle kritischen Tasks laufen zuerst über Perplexity. Nur bei Überlastung wird auf Fallback-Agenten umgeleitet.</p></div>
+      <div class="sg3"><div class="sbox pi"><span class="sv">12</span><span class="sl">Apps</span></div><div class="sbox pi"><span class="sv">€0</span><span class="sl">Infrastruktur</span></div><div class="sbox pi"><span class="sv">24/7</span><span class="sl">Deploy</span></div><div class="sbox pi"><span class="sv">9+</span><span class="sl">Modelle</span></div></div>
+      <div class="ps2"><div class="ps2-h">Was Perplexity beiträgt</div>
+        <div class="pl2">Compute für alle 12 Apps<span class="pla">✓</span></div>
+        <div class="pl2">KI-Agenten 24/7 Deployment<span class="pla">✓</span></div>
+        <div class="pl2">Modell-Rotation (Gemini, Mistral, Llama)<span class="pla">✓</span></div>
+        <div class="pl2">€0 GPU-Kosten für RealSync<span class="pla">✓</span></div>
+        <div class="pl2">Primäres Routing in AutoOS Gate<span class="pla">✓</span></div>
+      </div>`},
+    comet: {t:'Comet Browser',s:'Partner Agent · Browser-Automation',h:`
+      <div class="ib2 ci"><span class="ib2-l">Partner Agent</span><p class="ib2-t"><strong>Comet Browser</strong> ist der Browser-Automation-Partner. Zuständig für Web-Research, Creator-Monitoring, Social-Media-Scraping und automatisches Fetchen externer Daten. Perplexity AI analysiert, Comet Browser beschafft die Rohdaten.</p></div>
+      <div class="sg3"><div class="sbox ci"><span class="sv">Web</span><span class="sl">Research</span></div><div class="sbox ci"><span class="sv">Social</span><span class="sl">Monitor</span></div><div class="sbox ci"><span class="sv">Auto</span><span class="sl">Browse</span></div><div class="sbox ci"><span class="sv">Live</span><span class="sl">Data</span></div></div>
+      <div class="ps2"><div class="ps2-h">Comet-powered Apps</div>
+        <div class="pl2">DataCore — Marktdaten-Scraping<span class="pla">✓</span></div>
+        <div class="pl2">SocialHub — Platform-Monitoring<span class="pla">✓</span></div>
+        <div class="pl2">FlowSync — Externe Daten-Fetch<span class="pla">✓</span></div>
+        <div class="pl2">AdEngine — Zielgruppen-Research<span class="pla">✓</span></div>
+      </div>
+      <div class="ib2 ci" style="margin-top:8px"><span class="ib2-l">Partnership-Anfrage</span><p class="ib2-t">Comet Browser × RealSync Dynamics — strategische Partnership für Browser-Automation in der Creator Economy.</p></div>
+      <div class="pf2"><input placeholder="Deine E-Mail" type="email"><button class="pfb ci" onclick="alert('Partnership-Anfrage gesendet an Comet Browser Team!')">Partnership anfragen →</button></div>`},
+    routing_info: {t:'Perplexity-First Routing',s:'Agent-Hierarchie · Fallback-Kette',h:`
+      <div class="ib2 pi"><span class="ib2-l">Routing-Regel</span><p class="ib2-t">Jeder Task wird zuerst an <strong>Perplexity AI</strong> gesendet. Comet Browser für alle Web-Tasks. Fallback-Kette greift nur bei Überlastung oder nicht verfügbarem Modell.</p></div>
+      <div class="ps2"><div class="ps2-h">Routing-Hierarchie</div>
+        <div class="pl2" style="color:var(--perp2)">#1 Perplexity AI — Primary (alle Tasks)<span class="pla">AKTIV</span></div>
+        <div class="pl2" style="color:var(--comet2)">#2 Comet Browser — Partner (Web-Tasks)<span class="pla">AKTIV</span></div>
+        <div class="pl2">#3 Gemini Pro — Fallback (Vision, Long-Context)<span class="pla">STANDBY</span></div>
+        <div class="pl2">#4 Mistral 7B — Fallback (DE-Sprache)<span class="pla">STANDBY</span></div>
+        <div class="pl2">#5 Llama 3.1 — Fallback (Open-Source Code)<span class="pla">STANDBY</span></div>
+        <div class="pl2">#6 Claude Sonnet — Fallback (Writing)<span class="pla">STANDBY</span></div>
+        <div class="pl2">#7 DeepSeek R1 — Last Resort (Reasoning)<span class="pla">STANDBY</span></div>
+      </div>`},
+    screenshot:{t:'Screenshot-Aktion',s:'3 Monate Silver gratis',h:`
+      <div class="ib2"><span class="ib2-l">So geht's</span><p class="ib2-t"><strong>1.</strong> Screenshot von realsyncdynamics.de<br><strong>2.</strong> Auf Instagram/TikTok/X posten<br><strong>3.</strong> @realsyncdynamics taggen + #CreatorSeal<br><strong>4.</strong> Link einsenden → <strong>3 Monate Silver gratis</strong></p></div>
+      <div class="pf2"><input placeholder="Name" type="text"><input placeholder="E-Mail" type="email"><input placeholder="Link zum Post" type="url"><button class="pfb" onclick="alert('Danke! Perplexity AI prüft deinen Post in 24h.')">Einsenden →</button></div>`},
+    affiliate:{t:'Affiliate-Programm',s:'30% monatliche Provision',h:`
+      <div class="sg3"><div class="sbox"><span class="sv">30%</span><span class="sl">Provision</span></div><div class="sbox"><span class="sv">∞</span><span class="sl">Laufzeit</span></div><div class="sbox"><span class="sv">mtl.</span><span class="sl">Zahlung</span></div><div class="sbox"><span class="sv">€0</span><span class="sl">Einstieg</span></div></div>
+      <div class="pf2"><input placeholder="Name" type="text"><input placeholder="E-Mail" type="email"><input placeholder="Kanal / Website" type="url"><button class="pfb" onclick="alert('Bewerbung eingegangen!')">Bewerben →</button></div>`},
+    enterprise:{t:'Enterprise-Pakete',s:'B2B · White-Label · API',h:`
+      <div class="pc2"><div class="pcard"><div class="pcard-t">Bronze</div><div class="pcard-v">€0 <span>/Monat</span></div><div class="pcard-f">5 Signaturen · Trust Score · Creator Badge</div></div><div class="pcard hot"><div class="pcard-t">Silver · Empfohlen</div><div class="pcard-v">€29 <span>/Monat</span></div><div class="pcard-f">100 Signaturen · Creator Page · QR · Referral</div></div><div class="pcard"><div class="pcard-t">Gold</div><div class="pcard-v">€49 <span>/Monat</span></div><div class="pcard-f">Unbegrenzt · API · Analytics · C2PA</div></div><div class="pcard"><div class="pcard-t">Platinum</div><div class="pcard-v">€149 <span>/Monat</span></div><div class="pcard-f">White-Label · Team · Enterprise-SLA</div></div></div>
+      <div class="pf2"><input placeholder="Unternehmen" type="text"><input placeholder="E-Mail" type="email"><textarea placeholder="Was brauchen Sie?"></textarea><button class="pfb" onclick="alert('Demo in 48h.')">Demo anfragen →</button></div>`},
+    flowsync_info:{t:'FlowSync',s:'Creator Workspace · Comet-powered · Beta',h:`
+      <div class="ib2 ci"><span class="ib2-l">Was ist FlowSync?</span><p class="ib2-t">Notion-Style Docs + Airtable-Datenbanken + Zapier-Automation. <strong>Comet Browser</strong> fetcht automatisch externe Daten. Perplexity AI analysiert und strukturiert Inhalte.</p></div>
+      <div class="ps2"><div class="ps2-h">Features</div>
+        <div class="pl2">Notion-Style Creator-Workspace<span class="pla">→</span></div>
+        <div class="pl2">Multi-View Datenbanken (Grid, Kanban, Kalender)<span class="pla">→</span></div>
+        <div class="pl2">Automation zwischen allen 12 RealSync-Apps<span class="pla">→</span></div>
+        <div class="pl2">Comet Browser: externe Daten automatisch fetchen<span class="pla">→</span></div>
+      </div>
+      <a class="pfb" href="https://realsyncdynamics.de/flowsync" target="_blank" style="display:block;text-align:center;">FlowSync Beta →</a>`},
+    history:{t:'Firmengeschichte',s:'Von Bubble.io zum Creator-OS',h:`
+      <div class="tline"><div class="tli"><div class="tld done"></div><div><div class="tl-dt">2024 Q1</div><div class="tl-t">Gründung</div><div class="tl-d">Einzelunternehmen. Erste CreatorSeal-Konzepte auf Bubble.io.</div></div></div><div class="tli"><div class="tld done"></div><div><div class="tl-dt">2025 Q1</div><div class="tl-t">CreatorSeal Live</div><div class="tl-d">C2PA 2.3, Polygon, Deepfake 98%.</div></div></div><div class="tli"><div class="tld done"></div><div><div class="tl-dt">2025 Q3</div><div class="tl-t">10 Apps + Perplexity AI</div><div class="tl-d">Perplexity als Primary Agent. €0 Infrastruktur.</div></div></div><div class="tli"><div class="tld done"></div><div><div class="tl-dt">2026 Q1</div><div class="tl-t">12 Apps + Comet Partner</div><div class="tl-d">FlowSync, Gate. Comet Browser als Web-Agent.</div></div></div><div class="tli"><div class="tld now"></div><div><div class="tl-dt">2026 — Jetzt</div><div class="tl-t">DACH-Expansion</div><div class="tl-d">AT, CH, Enterprise, EU-Förderanträge.</div></div></div></div>`},
+    impressum:{t:'Impressum',s:'§ 5 TMG',h:`<div class="ib2"><span class="ib2-l">§ 5 TMG</span><p class="ib2-t"><strong>RealSync Dynamics</strong><br>Inhaber: Dominik Steiner<br>Schwarzburger Str. 31 · 98724 Neuhaus am Rennweg<br>Thüringen · Deutschland<br>Rechtsform: Einzelunternehmen · § 19 UStG<br>GitHub: github.com/Chico1711</p></div><div class="ps2"><div class="ps2-h">Kontakt</div><a class="pl2" href="mailto:kontakt@realsyncdynamics.de">kontakt@realsyncdynamics.de<span class="pla">→</span></a><a class="pl2" href="mailto:abuse@realsyncdynamics.de">DSA/Abuse: abuse@realsyncdynamics.de<span class="pla">→</span></a></div>`},
+    datenschutz:{t:'Datenschutz',s:'DSGVO · Ihre Rechte',h:`<div class="ib2"><span class="ib2-l">Grundsatz</span><p class="ib2-t">Nur notwendige Daten. Keine Weitergabe. Alle Server EU. Perplexity AI: keine dauerhafte Datenspeicherung.</p></div><div class="pf2"><input placeholder="E-Mail" type="email"><button class="pfb" onclick="alert('Anfrage eingegangen.')">DSGVO-Anfrage →</button></div>`},
+    agb:{t:'AGB',s:'Allgemeine Geschäftsbedingungen',h:`<div class="ib2"><span class="ib2-l">Geltungsbereich</span><p class="ib2-t">Für alle Leistungen der RealSync Dynamics.</p></div><div class="ps2"><div class="ps2-h">Regelungen</div><a class="pl2" href="#">§1 Leistungsbeschreibung<span class="pla">→</span></a><a class="pl2" href="#">§2 Vertragsschluss<span class="pla">→</span></a><a class="pl2" href="#">§3 Preise & Zahlung<span class="pla">→</span></a><a class="pl2" href="#">§4 Widerrufsrecht (14 Tage)<span class="pla">→</span></a><a class="pl2" href="#">§5 DSGVO & Datenschutz<span class="pla">→</span></a></div>`},
+    dsa:{t:'DSA',s:'Digital Services Act',h:`<div class="ib2"><span class="ib2-l">DSA-Compliance</span><p class="ib2-t">RealSync ist vollständig DSA-konform. Meldungen werden in 24h geprüft.</p></div><div class="pf2"><input placeholder="E-Mail" type="email"><select><option>Verstoß-Typ</option><option>Urheberrecht</option><option>Missbrauch</option><option>Datenschutz</option></select><textarea placeholder="Beschreibung..."></textarea><button class="pfb" onclick="alert('Meldung eingegangen.')">Melden →</button></div>`},
+    wett_join:{t:'Platz sichern',s:'847/1000 vergeben · 153 frei',h:`<div class="sg3"><div class="sbox"><span class="sv">847</span><span class="sl">Vergeben</span></div><div class="sbox"><span class="sv">153</span><span class="sl">Noch frei</span></div></div><div class="ib2"><span class="ib2-l">Vorteile</span><p class="ib2-t">Permanente <strong>Pro-Features</strong>. Perplexity AI Ranking. Creator-Badge "Early Adopter".</p></div><div class="pf2"><input placeholder="Creator-Name" type="text"><input placeholder="E-Mail" type="email"><button class="pfb" onclick="alert('Platz gesichert! Perplexity AI hat dich registriert. 🎉')">Platz sichern →</button></div>`},
+    live_chat:{t:'Live Chat',s:'Mo–Fr · 9–18 Uhr',h:`<div class="ib2"><span class="ib2-l">Direkter Kontakt</span><p class="ib2-t">Kein Bot. Perplexity AI analysiert deine Anfrage vorab — dann antwortet das Team schneller.</p></div><div class="pf2"><input placeholder="Name" type="text"><input placeholder="E-Mail" type="email"><select><option>Thema</option><option>Support</option><option>Enterprise</option><option>Perplexity Partnership</option><option>Comet Partnership</option><option>Sonstiges</option></select><textarea placeholder="Nachricht..."></textarea><button class="pfb" onclick="alert('Gesendet! Perplexity AI priorisiert deine Anfrage.')">Senden →</button></div>`},
+    login:{t:'Login',s:'RealSync Platform',h:`<div class="pf2"><input placeholder="E-Mail" type="email"><input placeholder="Passwort" type="password"><button class="pfb" onclick="alert('Login bald verfügbar.')">Einloggen →</button></div><div class="ps2"><div class="ps2-h">Neu?</div><a class="pl2" href="#" onclick="openP('register');return false">Kostenlos registrieren<span class="pla">→</span></a></div>`},
+    register:{t:'Kostenlos starten',s:'Bronze · Für immer gratis',h:`<div class="ib2"><span class="ib2-l">Bronze kostenlos</span><p class="ib2-t">5 Signaturen · Trust Score · Creator Badge. Keine Kreditkarte.</p></div><div class="pf2"><input placeholder="Creator-Name" type="text"><input placeholder="E-Mail" type="email"><input placeholder="Passwort" type="password"><button class="pfb" onclick="alert('Account erstellt! Willkommen. 🎉')">Account erstellen →</button></div>`},
+    klima:{t:'Klimaeffizienz',s:'€0 GPU-Waste · Perplexity + Comet',h:`<div class="ib2 pi"><span class="ib2-l">Perplexity AI Compute</span><p class="ib2-t">Gratis-Modelle rotieren: <strong>Gemini, DeepSeek, Mistral, Llama</strong>. Perplexity AI optimiert Ressourcen automatisch. €0 GPU-Kosten.</p></div><div class="ib2 ci"><span class="ib2-l">Comet Browser</span><p class="ib2-t">Comet Browser nutzt existing Browser-Infrastruktur. Kein extra Server-Overhead für Web-Research.</p></div>`},
+    newsletter:{t:'Newsletter',s:'Updates · Perplexity · Comet',h:`<div class="pf2"><input placeholder="Name" type="text"><input placeholder="E-Mail" type="email"><button class="pfb" onclick="alert('Angemeldet! Perplexity AI personalisiert deine Updates.')">Abonnieren →</button></div>`},
+  };
+  const d = m[key];
+  if(d) return d;
+  return {t:key.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()),s:'RealSync Dynamics',h:`<div class="ib2"><span class="ib2-l">In Kürze</span><p class="ib2-t">Kontakt: <strong>kontakt@realsyncdynamics.de</strong></p></div><div class="pf2"><input placeholder="E-Mail" type="email"><textarea placeholder="Frage..."></textarea><button class="pfb" onclick="alert('Danke!')">Senden →</button></div>`};
+}
+
+/* ════════════════════════════════════════════════════════
+   NAV RENDER
+════════════════════════════════════════════════════════ */
+(function(){
+  const s = document.getElementById('strip');
+  NAV.forEach(n => {
+    const b = document.createElement('button');
+    b.className = 'nb' + (n.hi ? ' hi' : '') + (n.lv ? ' lv' : '');
+    b.dataset.id = n.id;
+    let h = n.lv ? '<span class="ldot"></span>' : n.hi ? '<span class="gdot"></span>' : '';
+    h += n.label + '<span class="arr">▾</span>';
+    b.innerHTML = h;
+    b.addEventListener('click', () => toggleMega(n.id));
+    s.appendChild(b);
+    if(['partner','roadmap','support'].includes(n.id)) {
+      const sep = document.createElement('div'); sep.className = 'vsep'; s.appendChild(sep);
+    }
+  });
+})();
+
+let curMenu = null;
+function toggleMega(id) {
+  if(curMenu === id) { closeMega(); return; }
+  curMenu = id;
+  document.querySelectorAll('.nb').forEach(b => b.classList.toggle('open', b.dataset.id === id));
+  renderMega(id);
+  document.getElementById('mega').classList.add('open');
+  closeP();
+}
+function closeMega() {
+  curMenu = null;
+  document.getElementById('mega').classList.remove('open');
+  document.querySelectorAll('.nb').forEach(b => b.classList.remove('open'));
+}
+function renderMega(id) {
+  const data = NAV.find(n => n.id === id); if(!data) return;
+  const cont = document.getElementById('megaCols'); cont.innerHTML = '';
+  data.cols.forEach(col => {
+    const d = document.createElement('div'); d.className = 'mc';
+    if(col.feat) {
+      const fcls = 'feat feat-' + (col.cls === 'pf' ? 'p' : col.cls === 'cf' ? 'c' : 'g');
+      const pa = col.p ? `onclick="handleMI('${col.p}');return false;"` : col.url ? `href="${col.url}" target="_blank"` : '';
+      d.innerHTML = `<div class="${fcls}"><span class="ft">${col.tag}</span><div class="fn">${col.title}</div><p class="fd">${col.desc}</p><a class="fb ${col.cls_btn||'fb-g'}" ${pa}>${col.btn} →</a></div>`;
+    } else {
+      let h = `<div class="mch"><span>${col.i}</span>${col.h}</div>`;
+      col.items.forEach(it => {
+        const bxMap = {l:'LIVE',n:'NEU',h:'HOT',p:'PERP',c:'COMET',s:'SOON'};
+        const bx = it.bx ? `<span class="bx bx-${it.bx}">${bxMap[it.bx]||it.bx}</span>` : '';
+        const tgt = it.url ? `href="${it.url}" target="_blank"` : it.p ? `href="#" onclick="handleMI('${it.p}');return false;"` : '';
+        h += `<a class="mi" ${tgt}><span class="mi-ic">${it.i}</span><div class="mi-b"><span class="mi-t">${it.t}${bx}</span><span class="mi-d">${it.d}</span></div></a>`;
+      });
+      d.innerHTML = h;
+    }
+    cont.appendChild(d);
+  });
+}
+function handleMI(key) { closeMega(); openP(key); }
+document.addEventListener('click', e => {
+  const nav = document.getElementById('mainNav');
+  const mega = document.getElementById('mega');
+  if(!nav.contains(e.target) && !mega.contains(e.target)) closeMega();
+});
+
+/* ════════════════════════════════════════════════════════
+   PANEL
+════════════════════════════════════════════════════════ */
+function openP(key) {
+  closeMega();
+  const d = getPC(key);
+  document.getElementById('pnT').textContent = d.t;
+  document.getElementById('pnS').textContent = d.s;
+  document.getElementById('pnB').innerHTML = d.h;
+  document.getElementById('pnl').classList.add('open');
+}
+function closeP() { document.getElementById('pnl').classList.remove('open'); }
+
+/* ════════════════════════════════════════════════════════
+   APP MODAL
+════════════════════════════════════════════════════════ */
+function openApp(i) {
+  const a = APPS[i];
+  document.getElementById('moT').textContent = a.n;
+  document.getElementById('moS').textContent = a.sub;
+  document.getElementById('moD').textContent = a.desc;
+  document.getElementById('moL').href = a.url;
+  const mm = document.getElementById('mMrg');
+  if(a.m) { mm.style.display = ''; document.getElementById('mMI').innerHTML = a.m.map(x => `<span class="mmit">${x}</span>`).join(''); }
+  else mm.style.display = 'none';
+  document.getElementById('moTa').innerHTML = a.tags.map(t => `<span>${t}</span>`).join('');
+  const ms = document.getElementById('moSt');
+  ms.className = 'mst ' + (a.s === 'live' ? 'ms-l' : 'ms-b');
+  ms.innerHTML = `<span class="spd" style="background:${a.s==='live'?'#00FF88':'#00F0FF'}"></span>${a.s==='live'?'Live':'Beta'}`;
+  document.getElementById('appModal').classList.add('open');
+  return false;
+}
+function closeM() { document.getElementById('appModal').classList.remove('open'); }
+document.addEventListener('keydown', e => { if(e.key === 'Escape') { closeMega(); closeP(); closeM(); closeAmgr(); } });
+
+/* ════════════════════════════════════════════════════════
+   APP MANAGER
+════════════════════════════════════════════════════════ */
+let amTab = 'apps';
+let selApp = APPS[0];
+let amT = 0;
+let amRAF = null;
+
+function openAmgr() {
+  document.getElementById('amb').classList.add('open');
+  setAmTab('apps', null);
+  setTimeout(startAmCanvas, 80);
+}
+function closeAmgr() {
+  document.getElementById('amb').classList.remove('open');
+  if(amRAF) { cancelAnimationFrame(amRAF); amRAF = null; }
+}
+function setAmTab(tab, btn) {
+  amTab = tab;
+  document.querySelectorAll('.amt').forEach(b => b.classList.remove('on'));
+  if(btn) btn.classList.add('on');
+  else document.querySelectorAll('.amt').forEach((b,i) => { if(['apps','agents','routing','stats'][i] === tab) b.classList.add('on'); });
+  renderAmContent();
+}
+function renderAmContent() {
+  const c = document.getElementById('amContent');
+  if(amTab === 'apps') {
+    let h = '';
+    if(selApp) {
+      h += `<div style="margin-bottom:10px"><div class="amd-nm" style="color:${selApp.c}">${selApp.n}</div><div class="amd-sb">${selApp.sub}</div>`;
+      h += `<div style="display:flex;align-items:center;gap:6px;margin-bottom:8px"><div style="width:7px;height:7px;border-radius:50%;background:${selApp.agentColor}"></div><span style="font-family:DM Mono,monospace;font-size:7px;letter-spacing:.1em;text-transform:uppercase;color:${selApp.agentColor}">${selApp.agent}</span></div>`;
+      h += `<p class="amd-dc">${selApp.desc}</p>`;
+      if(selApp.connections && selApp.connections.length) {
+        h += `<div class="amd-ch">// Verbindungen</div>`;
+        selApp.connections.slice(0,4).forEach(ci => {
+          const ca = APPS[ci]; if(!ca) return;
+          h += `<div class="conn-row"><div class="conn-d" style="background:${selApp.c}"></div><span style="color:${selApp.c};font-size:7.5px">${selApp.n}</span><span class="conn-ar">→</span><div class="conn-d" style="background:${ca.c}"></div><span style="color:${ca.c};font-size:7.5px">${ca.n}</span></div>`;
+        });
+      }
+      if(selApp.metrics) {
+        h += `<div class="amd-m">`;
+        selApp.metrics.forEach(m => h += `<div class="amd-mv"><span class="mv-v" style="color:${selApp.c}">${m.v}</span><span class="mv-l">${m.l}</span></div>`);
+        h += `</div>`;
+      }
+      h += `<div class="am-btns"><a class="am-launch" href="${selApp.url}" target="_blank">App öffnen →</a><button class="am-launch2" onclick="closeAmgr();openApp(${selApp.id})">Details</button></div></div>`;
+    }
+    h += `<div style="border-top:1px solid var(--bd2);padding-top:10px">`;
+    APPS.forEach(a => {
+      const sel = selApp && selApp.id === a.id;
+      h += `<div class="aml-item${sel ? ' sel' : ''}" style="${sel ? '--nc:' + a.c : ''}" onclick="selAmApp(${a.id})"><div class="aml-dot" style="background:${a.c}"></div><div class="aml-n">${a.n}</div><div class="aml-ag" style="border-color:${a.agentColor};color:${a.agentColor}">${a.agent === 'Perplexity AI' ? '⬡' : '◉'}</div><div class="aml-st ${a.s === 'live' ? 'st-l' : 'st-b'}">${a.s.toUpperCase()}</div></div>`;
+    });
+    h += `</div>`;
+    c.innerHTML = h;
+  } else if(amTab === 'agents') {
+    let h = `<div class="agent-prio-block"><div class="apb-h">// Agent-Hierarchie · Perplexity-First</div>`;
+    AGENTS.forEach((ag, i) => {
+      const typeMap = {PRIMARY:'s-pri', PARTNER:'s-par', FALLBACK:'s-fb'};
+      const tc = {PRIMARY:ag.color, PARTNER:ag.color, FALLBACK:'var(--sub)'};
+      h += `<div class="ag-prio-row"><span class="ag-rank">${i+1}</span><span class="ag-pri-name" style="color:${tc[ag.tier]}">${ag.name}</span><span class="ag-pri-type" style="border-color:${ag.color};color:${ag.color}">${ag.tier}</span><span class="ag-pri-desc">${ag.desc}</span></div>`;
+    });
+    h += `</div>`;
+    h += `<div class="apb-h" style="margin-top:10px">// Routing-Regeln</div>`;
+    ROUTING_RULES.forEach(r => {
+      const pc = r.primary === 'Perplexity AI' ? 'var(--perp2)' : 'var(--comet2)';
+      h += `<div class="route-row"><span class="rt-from" style="color:var(--sub);flex:2">${r.task}</span><span class="rt-arr">→</span><span style="color:${pc};font-size:7.5px;flex:1.5">${r.primary}</span><span style="color:var(--dim);font-size:7px;flex:1">${r.fallback}</span></div>`;
+    });
+    c.innerHTML = h;
+  } else if(amTab === 'routing') {
+    let h = `<div class="apb-h">// Inter-App-Routing · Live</div>`;
+    INTER_APP_ROUTES.forEach(r => {
+      const ac = r.agent === 'Perplexity AI' ? 'var(--perp2)' : 'var(--comet2)';
+      h += `<div class="route-row"><span class="rt-from">${r.from}</span><span class="rt-arr">→</span><span class="rt-to">${r.to}</span><span style="color:${ac};font-size:6.5px;letter-spacing:.06em;text-transform:uppercase">${r.agent === 'Perplexity AI' ? '⬡' : '◉'}</span><div class="rt-d ${r.on ? 'on' : 'off'}"></div></div>`;
+    });
+    h += `<div style="margin-top:10px;font-family:DM Mono,monospace;font-size:7px;letter-spacing:.12em;text-transform:uppercase;color:var(--perp2)">⬡ Perplexity AI: 10 aktive Routes · ◉ Comet Browser: 4 aktive Routes</div>`;
+    c.innerHTML = h;
+  } else {
+    let h = `<div class="apb-h">// Platform Stats · Live</div>`;
+    const stats = [
+      {l:'Apps deployed',v:'12',p:100,c:'var(--gb)'},
+      {l:'Agenten aktiv',v:'2/7',p:29,c:'var(--perp2)'},
+      {l:'Perplexity Load',v:'92%',p:92,c:'var(--perp2)'},
+      {l:'Comet Load',v:'78%',p:78,c:'var(--comet2)'},
+      {l:'Fallback-Nutzung',v:'<1%',p:1,c:'var(--dim)'},
+      {l:'Uptime',v:'99.96%',p:100,c:'#00FF88'},
+      {l:'Wettbewerb',v:'847/1000',p:85,c:'var(--gb)'},
+      {l:'Deepfake Accuracy',v:'98%',p:98,c:'var(--gb)'},
+      {l:'Infrastruktur-Kosten',v:'€0',p:100,c:'var(--perp2)'},
+    ];
+    stats.forEach(s => {
+      h += `<div class="st-row"><span class="st-l2">${s.l}</span><div class="st-r"><div class="st-bar"><div class="st-bf" style="width:${s.p}%;background:${s.c}"></div></div><span class="st-v">${s.v}</span></div></div>`;
+    });
+    h += `<div class="apb-h" style="margin-top:12px">// App-Status</div>`;
+    APPS.forEach(a => {
+      h += `<div class="st-row"><span class="st-l2" style="color:${a.c}">${a.n}</span><div class="st-r"><div style="width:5px;height:5px;border-radius:50%;background:${a.agentColor};margin-right:3px"></div><div class="st-bar"><div class="st-bf" style="width:${a.s==='live'?100:65}%;background:${a.c}"></div></div><span class="st-v" style="color:${a.c}">${a.s.toUpperCase()}</span></div></div>`;
+    });
+    c.innerHTML = h;
+  }
+}
+function selAmApp(id) { selApp = APPS[id]; renderAmContent(); }
+
+/* App Manager canvas */
+function startAmCanvas() {
+  const cv = document.getElementById('amc'); if(!cv) return;
+  const par = cv.parentElement;
+  cv.width = par.offsetWidth; cv.height = par.offsetHeight;
+  const ctx = cv.getContext('2d');
+  const cx = cv.width / 2, cy = cv.height / 2;
+  const R = Math.min(cx, cy) * 0.68;
+  let hov = -1;
+  cv.addEventListener('mousemove', e => {
+    const r = cv.getBoundingClientRect(); const mx = e.clientX - r.left, my = e.clientY - r.top;
+    hov = -1;
+    APPS.forEach((a, i) => {
+      const ang = -Math.PI / 2 + (2 * Math.PI / APPS.length) * i;
+      if(Math.hypot(mx - (cx + R * Math.cos(ang)), my - (cy + R * Math.sin(ang))) < 22) hov = i;
+    });
+    cv.style.cursor = hov >= 0 ? 'pointer' : 'default';
+  });
+  cv.addEventListener('click', () => { if(hov >= 0) selAmApp(hov); });
+  function draw() {
+    amRAF = requestAnimationFrame(draw);
+    if(!document.getElementById('amb').classList.contains('open')) { cancelAnimationFrame(amRAF); amRAF = null; return; }
+    amT += 0.006;
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    ctx.fillStyle = '#070A12'; ctx.fillRect(0, 0, cv.width, cv.height);
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(201,168,76,.09)'; ctx.lineWidth = 1; ctx.setLineDash([4, 6]); ctx.stroke(); ctx.setLineDash([]);
+    // Connection lines for selApp
+    if(selApp && selApp.connections) {
+      selApp.connections.forEach(ci => {
+        const ca = APPS[ci]; if(!ca) return;
+        const a1 = -Math.PI / 2 + (2 * Math.PI / APPS.length) * selApp.id;
+        const a2 = -Math.PI / 2 + (2 * Math.PI / APPS.length) * ca.id;
+        const x1 = cx + R * Math.cos(a1), y1 = cy + R * Math.sin(a1);
+        const x2 = cx + R * Math.cos(a2), y2 = cy + R * Math.sin(a2);
+        const g = ctx.createLinearGradient(x1, y1, x2, y2);
+        g.addColorStop(0, selApp.c + '66'); g.addColorStop(1, ca.c + '33');
+        ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+        ctx.strokeStyle = g; ctx.lineWidth = 1; ctx.stroke();
+        const p = (amT * 0.4 + ci * 0.3) % 1;
+        const dx = x1 + (x2 - x1) * p, dy = y1 + (y2 - y1) * p;
+        ctx.beginPath(); ctx.arc(dx, dy, 2, 0, Math.PI * 2);
+        ctx.fillStyle = selApp.agentColor; ctx.globalAlpha = 0.75 * (1 - p * 0.4); ctx.fill(); ctx.globalAlpha = 1;
+      });
+    }
+    // Center eye
+    const eR = R * 0.19;
+    const ig = ctx.createRadialGradient(cx, cy, 0, cx, cy, eR);
+    ig.addColorStop(0, 'rgba(240,192,64,.28)'); ig.addColorStop(1, 'rgba(201,168,76,.04)');
+    ctx.beginPath(); ctx.arc(cx, cy, eR, 0, Math.PI * 2); ctx.fillStyle = ig; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx, cy, eR, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(201,168,76,.45)'; ctx.lineWidth = 1; ctx.stroke();
+    for(let i = 0; i < 12; i++) { ctx.beginPath(); ctx.arc(cx, cy, eR * .8, (i/12)*Math.PI*2+amT, ((i+.6)/12)*Math.PI*2+amT); ctx.strokeStyle = `rgba(240,192,64,${.28+.2*Math.sin(amT*3+i)})`; ctx.lineWidth = 1.4; ctx.stroke(); }
+    for(let i = 0; i < 8; i++) { ctx.beginPath(); ctx.arc(cx, cy, eR * .6, (i/8)*Math.PI*2-amT*1.3, ((i+.5)/8)*Math.PI*2-amT*1.3); ctx.strokeStyle = `rgba(45,212,191,${.22+.14*Math.cos(amT*2+i)})`; ctx.lineWidth = 1.1; ctx.stroke(); }
+    // Perplexity + Comet dots orbiting eye
+    const pAng = amT * 1.2; const cAng = -amT * 0.9;
+    ctx.beginPath(); ctx.arc(cx + eR * 1.3 * Math.cos(pAng), cy + eR * 1.3 * Math.sin(pAng), 3, 0, Math.PI * 2); ctx.fillStyle = '#2DD4BF'; ctx.shadowColor = '#2DD4BF'; ctx.shadowBlur = 6; ctx.fill(); ctx.shadowBlur = 0;
+    ctx.beginPath(); ctx.arc(cx + eR * 1.3 * Math.cos(cAng), cy + eR * 1.3 * Math.sin(cAng), 3, 0, Math.PI * 2); ctx.fillStyle = '#A78BFA'; ctx.shadowColor = '#A78BFA'; ctx.shadowBlur = 6; ctx.fill(); ctx.shadowBlur = 0;
+    ctx.beginPath(); ctx.arc(cx, cy, eR * .16, 0, Math.PI * 2); ctx.fillStyle = 'rgba(240,192,64,.95)'; ctx.fill();
+    ctx.textAlign = 'center'; ctx.font = `700 ${Math.round(eR*.27)}px Syne,sans-serif`; ctx.fillStyle = 'rgba(232,234,240,.8)'; ctx.fillText('Gate', cx, cy + eR * .12);
+    // App nodes
+    APPS.forEach((a, i) => {
+      const ang = -Math.PI / 2 + (2 * Math.PI / APPS.length) * i;
+      const nx = cx + R * Math.cos(ang), ny = cy + R * Math.sin(ang);
+      const isSel = selApp && selApp.id === a.id; const isHov = hov === i;
+      const r = isSel ? 17 : isHov ? 15 : 11;
+      if(isSel || isHov) {
+        const g = ctx.createRadialGradient(nx, ny, 0, nx, ny, r * 2.5);
+        g.addColorStop(0, a.c + '35'); g.addColorStop(1, 'transparent');
+        ctx.beginPath(); ctx.arc(nx, ny, r * 2.5, 0, Math.PI * 2); ctx.fillStyle = g; ctx.fill();
+      }
+      ctx.beginPath(); ctx.arc(nx, ny, r, 0, Math.PI * 2);
+      ctx.fillStyle = isSel ? a.c + '33' : '#0B0F18'; ctx.fill();
+      ctx.strokeStyle = a.c + (isSel ? 'FF' : '77'); ctx.lineWidth = isSel ? 1.8 : 1; ctx.stroke();
+      // Agent indicator dot
+      ctx.beginPath(); ctx.arc(nx + r * 0.65, ny - r * 0.65, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = a.agentColor; ctx.globalAlpha = 0.9; ctx.fill(); ctx.globalAlpha = 1;
+      ctx.font = `${isSel ? 600 : 500} ${isSel ? 8.5 : 7.5}px Syne,sans-serif`;
+      ctx.fillStyle = isSel || isHov ? a.c : 'rgba(200,210,230,.65)';
+      ctx.textAlign = 'center'; ctx.fillText(a.n, nx, ny + r + 11);
+    });
+  }
+  draw();
+}
+
+/* ════════════════════════════════════════════════════════
+   SVGS FOR ORBITAL NODES
+════════════════════════════════════════════════════════ */
+const SVGS = [
+  `<circle cx="34" cy="34" r="33" fill="url(#g0)" stroke="#F0C040" stroke-width="1.2"/><polygon points="34,13 41,27 57,29 45,40 48,56 34,48 20,56 23,40 11,29 27,27" fill="none" stroke="#F0C040" stroke-width="1.3"/><circle cx="34" cy="34" r="5" fill="#F0C040"/>`,
+  `<circle cx="34" cy="34" r="33" fill="url(#g1)" stroke="#FF6888" stroke-width="1.2"/><path d="M16,28 L42,20 L38,48 L16,38 Z" fill="none" stroke="#FF6888" stroke-width="1.3"/><line x1="38" y1="34" x2="52" y2="28" stroke="#FF6888" stroke-width="1.3"/><line x1="38" y1="38" x2="54" y2="40" stroke="#FF6888" stroke-width="1.3"/>`,
+  `<circle cx="34" cy="34" r="33" fill="url(#g2)" stroke="#00F0FF" stroke-width="1.2"/><rect x="13" y="40" width="7" height="11" rx="1" fill="#00F0FF" opacity=".5"/><rect x="23" y="32" width="7" height="19" rx="1" fill="#00F0FF" opacity=".7"/><rect x="33" y="24" width="7" height="27" rx="1" fill="#00F0FF" opacity=".85"/><rect x="43" y="18" width="7" height="33" rx="1" fill="#00F0FF"/>`,
+  `<circle cx="34" cy="34" r="33" fill="url(#g3)" stroke="#C080FF" stroke-width="1.2"/><rect x="22" y="18" width="24" height="17" rx="3" fill="none" stroke="#C080FF" stroke-width="1.3"/><circle cx="28" cy="25" r="2.5" fill="#C080FF" opacity=".8"/><circle cx="40" cy="25" r="2.5" fill="#C080FF" opacity=".8"/><line x1="34" y1="35" x2="34" y2="42" stroke="#C080FF" stroke-width="1.2"/><line x1="24" y1="42" x2="44" y2="42" stroke="#C080FF" stroke-width="1.3"/><line x1="24" y1="42" x2="20" y2="50" stroke="#C080FF" stroke-width="1.1"/><line x1="44" y1="42" x2="48" y2="50" stroke="#C080FF" stroke-width="1.1"/>`,
+  `<circle cx="34" cy="34" r="33" fill="url(#g4)" stroke="#80FFC0" stroke-width="1.2"/><circle cx="34" cy="22" r="8" fill="none" stroke="#80FFC0" stroke-width="1.3"/><path d="M18,48 C18,36 50,36 50,48" fill="none" stroke="#80FFC0" stroke-width="1.3"/><circle cx="18" cy="28" r="5" fill="none" stroke="#80FFC0" stroke-width="1" opacity=".65"/><circle cx="50" cy="28" r="5" fill="none" stroke="#80FFC0" stroke-width="1" opacity=".65"/>`,
+  `<circle cx="34" cy="34" r="33" fill="url(#g5)" stroke="#FFE060" stroke-width="1.2"/><polygon points="34,14 54,24 54,26 34,36 14,26 14,24" fill="none" stroke="#FFE060" stroke-width="1.3"/><line x1="34" y1="36" x2="34" y2="48" stroke="#FFE060" stroke-width="1.1"/><path d="M22,42 L22,50 Q34,54 46,50 L46,42" fill="none" stroke="#FFE060" stroke-width="1.1"/>`,
+  `<circle cx="34" cy="34" r="33" fill="url(#g6)" stroke="#60D0FF" stroke-width="1.2"/><polygon points="34,12 40,30 58,30 44,42 49,60 34,48 19,60 24,42 10,30 28,30" fill="none" stroke="#60D0FF" stroke-width="1.3"/><circle cx="34" cy="34" r="8" fill="none" stroke="#60D0FF" stroke-width=".9"/><circle cx="34" cy="34" r="3" fill="#60D0FF"/>`,
+  `<circle cx="34" cy="34" r="33" fill="url(#g7)" stroke="#FFA040" stroke-width="1.2"/><path d="M22,48 L38,20 L42,24 L26,52 Z" fill="none" stroke="#FFA040" stroke-width="1.3"/><path d="M42,20 C46,14 54,16 54,22 C54,26 50,28 46,28 L42,24" fill="none" stroke="#FFA040" stroke-width="1.3"/>`,
+  `<circle cx="34" cy="34" r="33" fill="url(#g8)" stroke="#FFD700" stroke-width="1.2"/><path d="M24,18 L44,18 L48,32 C48,42 34,50 34,50 C34,50 20,42 20,32 Z" fill="none" stroke="#FFD700" stroke-width="1.3"/><path d="M34,24 L36,30 L42,30 L37,34 L39,40 L34,36 L29,40 L31,34 L26,30 L32,30 Z" fill="#FFD700" opacity=".8"/>`,
+  `<circle cx="34" cy="34" r="33" fill="url(#g9)" stroke="#40FFA0" stroke-width="1.2"/><path d="M34,14 L52,22 L52,36 C52,46 34,56 34,56 C34,56 16,46 16,36 L16,22 Z" fill="none" stroke="#40FFA0" stroke-width="1.3"/><path d="M26,34 L32,40 L44,26" fill="none" stroke="#40FFA0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`,
+  `<circle cx="34" cy="34" r="33" fill="url(#g10)" stroke="#A78BFA" stroke-width="1.2"/><path d="M16,34 Q16,22 28,22 L34,22" fill="none" stroke="#A78BFA" stroke-width="1.3"/><path d="M34,22 Q46,22 46,34 Q46,46 34,46" fill="none" stroke="#A78BFA" stroke-width="1.3"/><path d="M34,46 Q22,46 22,34" fill="none" stroke="#A78BFA" stroke-width="1.3" stroke-dasharray="3 3"/><circle cx="16" cy="34" r="4" fill="none" stroke="#A78BFA" stroke-width="1.2"/><circle cx="34" cy="22" r="4" fill="none" stroke="#A78BFA" stroke-width="1.2"/><circle cx="46" cy="34" r="4" fill="none" stroke="#A78BFA" stroke-width="1.2"/><circle cx="34" cy="46" r="4" fill="none" stroke="#A78BFA" stroke-width="1.2"/>`,
+  `<circle cx="34" cy="34" r="33" fill="url(#g11)" stroke="#F0C040" stroke-width="1.5"/><circle cx="34" cy="34" r="23" fill="none" stroke="#F0C040" stroke-width=".7" stroke-dasharray="3 3" opacity=".5"/><circle cx="34" cy="34" r="14" fill="none" stroke="rgba(0,240,255,.5)" stroke-width=".7" stroke-dasharray="2 4"/><ellipse cx="34" cy="34" rx="22" ry="9" fill="none" stroke="#F0C040" stroke-width="1" opacity=".55"/><ellipse cx="34" cy="34" rx="9" ry="22" fill="none" stroke="rgba(0,240,255,.4)" stroke-width="1" opacity=".55"/><circle cx="34" cy="34" r="6" fill="none" stroke="#F0C040" stroke-width="1.3"/><circle cx="34" cy="34" r="2.5" fill="#F0C040"/><line x1="34" y1="12" x2="34" y2="20" stroke="#F0C040" stroke-width="1.1" opacity=".7"/><line x1="34" y1="48" x2="34" y2="56" stroke="#F0C040" stroke-width="1.1" opacity=".7"/><line x1="12" y1="34" x2="20" y2="34" stroke="#F0C040" stroke-width="1.1" opacity=".7"/><line x1="48" y1="34" x2="56" y2="34" stroke="#F0C040" stroke-width="1.1" opacity=".7"/>`,
+];
+
+/* Build nodes */
+(function(){
+  const hub = document.getElementById('hub');
+  APPS.forEach((a, i) => {
+    const nd = document.createElement('div'); nd.className = 'nd'; nd.id = 'n' + i;
+    const sl = a.s === 'live' ? `<span class="stg tl2"><span class="spd"></span>Live</span>` : `<span class="stg tb2"><span class="spd"></span>Beta</span>`;
+    const ring = (i === 0 || i === 11) ? `<div class="air" style="--nc:${a.c};width:82px;height:82px;margin-left:-41px;margin-top:-41px;"></div>` : '';
+    nd.innerHTML = `<a class="na" href="#" onclick="return openApp(${i})" style="--nc:${a.c}"><div class="ns" style="--nc:${a.c};position:relative">${ring}<svg width="68" height="68" viewBox="0 0 68 68"><defs><radialGradient id="g${i}" cx="38%" cy="32%"><stop offset="0%" stop-color="${a.c}" stop-opacity=".2"/><stop offset="100%" stop-color="#070A12"/></radialGradient></defs>${SVGS[i]}</svg></div><div class="nl"><span class="nn">${a.n}</span><div>${sl}</div></div></a>`;
+    hub.appendChild(nd);
+  });
+})();
+
+/* Fit hub */
+function fitHub() {
+  const hub = document.getElementById('hub');
+  const navH = 44, agH = 26, tickH = 32, pad = 12;
+  const S = Math.min(720, window.innerHeight - navH - agH - tickH - pad, window.innerWidth - pad);
+  hub.style.width = hub.style.height = S + 'px';
+  const cx = S / 2, R = S * 0.41, off = -Math.PI / 2, N = APPS.length;
+  APPS.forEach((_, i) => {
+    const a = off + (2 * Math.PI / N) * i;
+    const n = document.getElementById('n' + i);
+    if(n) { n.style.left = (cx + R * Math.cos(a)) + 'px'; n.style.top = (cx + R * Math.sin(a)) + 'px'; }
+  });
+  const es = Math.round(S * 0.228);
+  const ec = document.getElementById('ec');
+  ec.width = ec.height = es; ec.style.width = ec.style.height = es + 'px';
+  document.getElementById('ei').style.width = document.getElementById('ei').style.height = es + 'px';
+}
+fitHub(); window.addEventListener('resize', fitHub);
+
+/* ════════════════════════════════════════════════════════
+   STARGATE EYE CANVAS
+════════════════════════════════════════════════════════ */
+(function(){
+  const cv = document.getElementById('ec'), ctx = cv.getContext('2d');
+  let t = 0;
+  function draw() {
+    const S = cv.width; if(!S) { requestAnimationFrame(draw); return; }
+    ctx.clearRect(0, 0, S, S);
+    const cx = S / 2, R = S / 2 - 1; t += 0.011;
+    const og = ctx.createRadialGradient(cx, cx, R * 0.3, cx, cx, R * 1.15);
+    og.addColorStop(0, 'rgba(201,168,76,0)'); og.addColorStop(.8, 'rgba(201,168,76,.07)'); og.addColorStop(1, 'rgba(240,192,64,.14)');
+    ctx.beginPath(); ctx.arc(cx, cx, R * 1.15, 0, Math.PI * 2); ctx.fillStyle = og; ctx.fill();
+    const iris = ctx.createRadialGradient(cx - S * .07, cx - S * .09, 0, cx, cx, R);
+    iris.addColorStop(0, '#1a2238'); iris.addColorStop(.4, '#0c1220'); iris.addColorStop(1, '#050810');
+    ctx.beginPath(); ctx.arc(cx, cx, R, 0, Math.PI * 2); ctx.fillStyle = iris; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx, cx, R, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(201,168,76,.8)'; ctx.lineWidth = 1.3; ctx.stroke();
+    for(let i = 0; i < 20; i++) { ctx.beginPath(); ctx.arc(cx, cx, R * .87, (i/20)*Math.PI*2+t, ((i+.72)/20)*Math.PI*2+t); ctx.strokeStyle = `rgba(240,192,64,${.3+.27*Math.sin(t*3+i)})`; ctx.lineWidth = 2; ctx.stroke(); }
+    for(let i = 0; i < 14; i++) { ctx.beginPath(); ctx.arc(cx, cx, R * .74, (i/14)*Math.PI*2-t*1.3, ((i+.62)/14)*Math.PI*2-t*1.3); ctx.strokeStyle = `rgba(0,240,255,${.24+.19*Math.cos(t*2+i)})`; ctx.lineWidth = 1.6; ctx.stroke(); }
+    for(let i = 0; i < 10; i++) { ctx.beginPath(); ctx.arc(cx, cx, R * .61, (i/10)*Math.PI*2+t*.4, ((i+.5)/10)*Math.PI*2+t*.4); ctx.strokeStyle = `rgba(45,212,191,${.17+.13*Math.sin(t*4+i*.5)})`; ctx.lineWidth = 1.1; ctx.stroke(); }
+    for(let i = 0; i < 8; i++) { ctx.beginPath(); ctx.arc(cx, cx, R * .5, (i/8)*Math.PI*2-t*.6, ((i+.4)/8)*Math.PI*2-t*.6); ctx.strokeStyle = `rgba(167,139,250,${.13+.1*Math.sin(t*2+i)})`; ctx.lineWidth = 1; ctx.stroke(); }
+    for(let i = 0; i < 28; i++) { const a = (i/28)*Math.PI*2+t*.45, r1 = R*(.47+Math.sin(t*3.5+i)*.03); ctx.beginPath(); ctx.moveTo(cx+r1*Math.cos(a),cx+r1*Math.sin(a)); ctx.lineTo(cx+R*.72*Math.cos(a),cx+R*.72*Math.sin(a)); ctx.strokeStyle=`rgba(201,168,76,${.09+.06*Math.sin(t*2+i*.4)})`; ctx.lineWidth=.7; ctx.stroke(); }
+    for(let r = 0; r < 5; r++) { const ir = R*(.11+r*.08), segs = 7+r*3; for(let s = 0; s < segs; s++) { const a1 = (s/segs)*Math.PI*2+t*(.28+r*.09), a2 = ((s+.48)/segs)*Math.PI*2+t*(.28+r*.09); ctx.beginPath(); ctx.arc(cx,cx,ir,a1,a2); ctx.strokeStyle = r%2===0 ? `rgba(201,168,76,${.19-r*.022})` : `rgba(0,200,220,${.14-r*.017})`; ctx.lineWidth = 1; ctx.stroke(); } }
+    const pg = ctx.createRadialGradient(cx, cx, 0, cx, cx, R * .19);
+    pg.addColorStop(0, 'rgba(240,192,64,.9)'); pg.addColorStop(.35, 'rgba(240,192,64,.34)'); pg.addColorStop(.7, 'rgba(0,240,255,.08)'); pg.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.arc(cx, cx, R * .19, 0, Math.PI * 2); ctx.fillStyle = pg; ctx.fill();
+    // Perplexity dot orbiting pupil
+    const pA = t * 1.5;
+    ctx.beginPath(); ctx.arc(cx + R*.25*Math.cos(pA), cx + R*.25*Math.sin(pA), 2.5, 0, Math.PI*2); ctx.fillStyle = '#2DD4BF'; ctx.shadowColor = '#2DD4BF'; ctx.shadowBlur = 7; ctx.fill();
+    // Comet dot orbiting pupil (opposite direction)
+    const cA = -t * 1.1;
+    ctx.beginPath(); ctx.arc(cx + R*.25*Math.cos(cA), cx + R*.25*Math.sin(cA), 2.5, 0, Math.PI*2); ctx.fillStyle = '#A78BFA'; ctx.shadowColor = '#A78BFA'; ctx.shadowBlur = 7; ctx.fill(); ctx.shadowBlur = 0;
+    const ds = R * .075; ctx.save(); ctx.translate(cx, cx); ctx.rotate(t * 1.4); ctx.beginPath(); ctx.moveTo(0,-ds); ctx.lineTo(ds,0); ctx.lineTo(0,ds); ctx.lineTo(-ds,0); ctx.closePath(); ctx.fillStyle = 'rgba(240,192,64,.96)'; ctx.shadowColor = '#F0C040'; ctx.shadowBlur = 9; ctx.fill(); ctx.restore(); ctx.shadowBlur = 0;
+    ctx.textAlign = 'center';
+    const f1 = Math.max(7, Math.round(S * .062));
+    ctx.font = `800 ${f1}px Syne,sans-serif`; ctx.fillStyle = 'rgba(232,234,240,.87)'; ctx.fillText('RealSync', cx, cx + R * .46);
+    ctx.font = `700 ${Math.max(6, Math.round(S*.05))}px Syne,sans-serif`; ctx.fillStyle = 'rgba(201,168,76,.8)'; ctx.fillText('DYNAMICS', cx, cx + R * .6);
+    ctx.font = `${Math.max(4, Math.round(S*.037))}px DM Mono,monospace`; ctx.fillStyle = 'rgba(45,212,191,.58)'; ctx.fillText('⬡ PERPLEXITY PRIMARY', cx, cx + R * .73);
+    ctx.font = `${Math.max(4, Math.round(S*.034))}px DM Mono,monospace`; ctx.fillStyle = 'rgba(167,139,250,.5)'; ctx.fillText('◉ COMET PARTNER', cx, cx + R * .85);
+    ctx.font = `${Math.max(4, Math.round(S*.032))}px DM Mono,monospace`; ctx.fillStyle = 'rgba(0,240,255,.35)'; ctx.fillText('▶ CLICK TO MANAGE', cx, cx + R * .95);
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ════════════════════════════════════════════════════════
+   HUB CANVAS
+════════════════════════════════════════════════════════ */
+(function(){
+  const cv = document.getElementById('hc'), ctx = cv.getContext('2d');
+  let S = 0, t = 0;
+  const C = APPS.map(a => a.c);
+  const AC = APPS.map(a => a.agentColor);
+  function resize() { const h = document.getElementById('hub'); S = h.offsetWidth; cv.width = cv.height = S; cv.style.width = cv.style.height = S + 'px'; }
+  function draw() {
+    if(!S) { requestAnimationFrame(draw); return; }
+    ctx.clearRect(0, 0, S, S); const cx = S / 2; t += 0.005;
+    [[.41,'rgba(201,168,76,.08)',1,[3,5]],[.78,'rgba(0,240,255,.035)',.7,[]],[.93,'rgba(45,212,191,.022)',.5,[2,9]]].forEach(([r,c,lw,d]) => {
+      ctx.beginPath(); ctx.arc(cx,cx,S*r,0,Math.PI*2); ctx.strokeStyle=c; ctx.lineWidth=lw; ctx.setLineDash(d); ctx.stroke(); ctx.setLineDash([]);
+    });
+    ctx.beginPath(); ctx.arc(cx,cx,S*.415,t,t+Math.PI*1.5); ctx.strokeStyle='rgba(0,240,255,.06)'; ctx.lineWidth=1; ctx.stroke();
+    const N = APPS.length, R = S * .41, off = -Math.PI / 2;
+    for(let i = 0; i < N; i++) {
+      const ang = off + (2*Math.PI/N)*i, nx = cx+R*Math.cos(ang), ny = cx+R*Math.sin(ang);
+      const ir = S*.108, gap = S*.044;
+      const sx = cx+(ir+1)*Math.cos(ang), sy = cx+(ir+1)*Math.sin(ang);
+      const ex = cx+(ir+1+(R-ir-gap))*Math.cos(ang), ey = cx+(ir+1+(R-ir-gap))*Math.sin(ang);
+      const g = ctx.createLinearGradient(sx,sy,ex,ey);
+      g.addColorStop(0, C[i]+'55'); g.addColorStop(.6, C[i]+'14'); g.addColorStop(1, C[i]+'04');
+      ctx.beginPath(); ctx.moveTo(sx,sy); ctx.lineTo(ex,ey); ctx.strokeStyle=g; ctx.lineWidth=.8; ctx.stroke();
+      const p = (t*.5+i/N)%1, dx=sx+(ex-sx)*p, dy=sy+(ey-sy)*p;
+      ctx.beginPath(); ctx.arc(dx,dy,1.4,0,Math.PI*2); ctx.fillStyle=AC[i]; ctx.globalAlpha=.7*(1-p*.5); ctx.fill(); ctx.globalAlpha=1;
+      ctx.beginPath(); ctx.arc(nx,ny,2+Math.sin(t*2+i)*.5,0,Math.PI*2); ctx.fillStyle=C[i]; ctx.globalAlpha=.22; ctx.fill(); ctx.globalAlpha=1;
+    }
+    requestAnimationFrame(draw);
+  }
+  setTimeout(() => { resize(); draw(); }, 80);
+  window.addEventListener('resize', () => setTimeout(resize, 50));
+})();
+
+/* ════════════════════════════════════════════════════════
+   BG CANVAS
+════════════════════════════════════════════════════════ */
+(function(){
+  const cv = document.getElementById('bgc'), ctx = cv.getContext('2d');
+  let W, H, pts = [], t = 0;
+  function resize() { W = cv.width = window.innerWidth; H = cv.height = window.innerHeight; }
+  resize(); window.addEventListener('resize', resize);
+  for(let i = 0; i < 100; i++) pts.push({x:Math.random(),y:Math.random(),vx:(Math.random()-.5)*.0003,vy:(Math.random()-.5)*.0003,s:Math.random()*.8+.2,c:[0,1,2][Math.floor(Math.random()*3)],ph:Math.random()*Math.PI*2});
+  const pCols = ['#C9A84C','#2DD4BF','#A78BFA'];
+  const streams = Array.from({length:25},()=>({x:Math.random(),y:Math.random(),vx:(Math.random()-.5)*.0007,vy:(Math.random()-.5)*.0007,trail:[],c:pCols[Math.floor(Math.random()*3)]}));
+  function frame() {
+    ctx.clearRect(0,0,W,H); t+=.004;
+    const bg = ctx.createRadialGradient(W*.5,H*.5,0,W*.5,H*.5,Math.max(W,H)*.7);
+    bg.addColorStop(0,'#0A0F1E'); bg.addColorStop(.5,'#050810'); bg.addColorStop(1,'#03050A');
+    ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+    ctx.globalAlpha=.014; ctx.strokeStyle='#C9A84C'; ctx.lineWidth=.5;
+    const hw=56,hh=48;
+    for(let col=-1;col<W/hw+1;col++) for(let row=-1;row<H/hh+1;row++) {
+      const ox=row%2===0?0:hw/2, px=col*hw+ox+Math.sin(t*.6+col*.4)*3, py=row*hh+Math.cos(t*.5+row*.3)*2;
+      ctx.beginPath(); for(let s=0;s<6;s++){const a=(Math.PI/3)*s;ctx.lineTo(px+20*Math.cos(a),py+20*Math.sin(a));} ctx.closePath(); ctx.stroke();
+    }
+    ctx.globalAlpha=1;
+    pts.forEach(p => {
+      p.x+=p.vx; p.y+=p.vy; p.ph+=.018;
+      if(p.x<0)p.x=1; if(p.x>1)p.x=0; if(p.y<0)p.y=1; if(p.y>1)p.y=0;
+      ctx.globalAlpha=.28+.22*Math.sin(p.ph); ctx.beginPath(); ctx.arc(p.x*W,p.y*H,p.s,0,Math.PI*2); ctx.fillStyle=pCols[p.c]; ctx.fill();
+    }); ctx.globalAlpha=1;
+    for(let i=0;i<pts.length;i++) for(let j=i+1;j<pts.length;j++) {
+      const dx=(pts[i].x-pts[j].x)*W, dy=(pts[i].y-pts[j].y)*H, d=Math.sqrt(dx*dx+dy*dy);
+      if(d<82) { ctx.globalAlpha=.035*(1-d/82); ctx.strokeStyle='#C9A84C'; ctx.lineWidth=.4; ctx.beginPath(); ctx.moveTo(pts[i].x*W,pts[i].y*H); ctx.lineTo(pts[j].x*W,pts[j].y*H); ctx.stroke(); }
+    } ctx.globalAlpha=1;
+    streams.forEach(s => {
+      s.trail.push({x:s.x*W,y:s.y*H}); if(s.trail.length>15) s.trail.shift();
+      s.x+=s.vx; s.y+=s.vy; if(s.x<0||s.x>1) s.vx*=-1; if(s.y<0||s.y>1) s.vy*=-1;
+      for(let i=1;i<s.trail.length;i++) { const f=i/s.trail.length; ctx.globalAlpha=f*.2; ctx.strokeStyle=s.c; ctx.lineWidth=f*1.2; ctx.beginPath(); ctx.moveTo(s.trail[i-1].x,s.trail[i-1].y); ctx.lineTo(s.trail[i].x,s.trail[i].y); ctx.stroke(); }
+    }); ctx.globalAlpha=1;
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+
+/* ════════════════════════════════════════════════════════
+   AGENT BAR
+════════════════════════════════════════════════════════ */
+(function(){
+  const agData = [
+    {n:'Perplexity AI', s:'PRIMARY', c:'#2DD4BF', task:'Alle Tasks · Primary'},
+    {n:'Comet Browser', s:'PARTNER', c:'#A78BFA', task:'Web-Research · Browse'},
+    {n:'CreatorSeal-Agent', s:'ACTIVE', c:'#F0C040', task:'C2PA · Deepfake'},
+    {n:'DataCore-Agent', s:'ACTIVE', c:'#00F0FF', task:'Marktanalyse · BI'},
+    {n:'AdEngine-Agent', s:'ACTIVE', c:'#FF6888', task:'Ad-Generation'},
+    {n:'SocialHub-Agent', s:'ACTIVE', c:'#80FFC0', task:'Auto-Posting · Monitor'},
+    {n:'AutoOS-Agent', s:'ACTIVE', c:'#C080FF', task:'Routing · Deployment'},
+    {n:'EduLab-Agent', s:'ACTIVE', c:'#FFE060', task:'Lernpfade · MINT'},
+    {n:'Handwerk-Agent', s:'ACTIVE', c:'#FFA040', task:'Aufträge · CRM'},
+    {n:'Wettbewerb-Agent', s:'ACTIVE', c:'#FFD700', task:'Ranking · Referral'},
+    {n:'Sicherheit-Agent', s:'ACTIVE', c:'#40FFA0', task:'Audit · Stripe'},
+    {n:'FlowSync-Agent', s:'ACTIVE', c:'#A78BFA', task:'Automation · Sync'},
+    {n:'Gate-Agent', s:'ACTIVE', c:'#F0C040', task:'Platform-Routing'},
+    {n:'Gemini Pro', s:'STANDBY', c:'#60D0FF', task:'Vision · Fallback #3'},
+    {n:'Mistral 7B', s:'STANDBY', c:'#80FFC0', task:'DE-Sprache · Fallback #4'},
+    {n:'Llama 3.1', s:'STANDBY', c:'#FFA040', task:'Code · Fallback #5'},
+    {n:'Claude Sonnet', s:'STANDBY', c:'#FFD700', task:'Writing · Fallback #6'},
+    {n:'DeepSeek R1', s:'STANDBY', c:'#FF6888', task:'Reasoning · Fallback #7'},
+  ];
+  const c = document.getElementById('agInner');
+  const sCls = {PRIMARY:'s-pri', PARTNER:'s-par', ACTIVE:'s-act', STANDBY:'s-fb'};
+  [...agData, ...agData].forEach(d => {
+    const el = document.createElement('span'); el.className = 'agi';
+    el.innerHTML = `<span class="agi-n" style="color:${d.c}">${d.n}</span><span class="agi-s ${sCls[d.s]||'s-fb'}">${d.s}</span><span style="color:var(--dim)">${d.task}</span><span class="agi-sep">·</span>`;
+    c.appendChild(el);
+  });
+})();
+
+/* ════════════════════════════════════════════════════════
+   TICKER
+════════════════════════════════════════════════════════ */
+(function(){
+  const td = [
+    {t:'PERP', v:'Perplexity AI Primary Agent aktiv', x:'ROUTING'},
+    {t:'COMET', v:'Comet Browser Partner · Web-Research', x:'AKTIV'},
+    {t:'SEAL', v:'CreatorSeal C2PA 2.3', x:'LIVE'},
+    {t:'AI', v:'Optimus · Perplexity-First · 9 Modelle', x:'ONLINE'},
+    {t:'DATA', v:'DataCore · Comet-powered Marktdaten', x:'LIVE'},
+    {t:'ADS', v:'AdEngine · Perplexity KI-Generation', x:'BETA'},
+    {t:'FLOW', v:'FlowSync · Comet Browser Automations', x:'BETA'},
+    {t:'CHAIN', v:'Polygon Block #68.241.009', x:'ANCHORED'},
+    {t:'SEC', v:'Sicherheit · Perplexity Audit-Agent', x:'SECURE'},
+    {t:'COMP', v:'Wettbewerb', x:'847/1000'},
+    {t:'DEEP', v:'Deepfake Detection', x:'98%'},
+    {t:'COST', v:'Infrastruktur · Perplexity Compute', x:'€0'},
+    {t:'SCALE', v:'Fallback-Nutzung (Gemini/Mistral/Llama)', x:'<1%'},
+  ];
+  const c = document.getElementById('tsc');
+  [...td, ...td].forEach(d => {
+    const el = document.createElement('span'); el.className = 'ti';
+    el.innerHTML = `<span class="tt">${d.t}</span>${d.v}<span class="tv">${d.x}</span><span class="ts">◆</span>`;
+    c.appendChild(el);
+  });
+})();
+
+/* Live counters */
+(function(){
+  let up = 99.94, co = 847;
+  setInterval(() => {
+    up = Math.min(99.99, up + Math.random() * .02 - .005);
+    if(Math.random() < .04) co = Math.min(1000, co + 1);
+    document.getElementById('pUp').textContent = up.toFixed(2) + '%';
+    document.getElementById('pCo').textContent = co + '/1000';
+  }, 3200);
+})();
+
+/* Hover cards */
+const hcard = document.createElement('div');
+hcard.style.cssText = 'position:fixed;z-index:600;background:#0D1220;border:1px solid var(--bd);padding:11px 13px;width:190px;pointer-events:none;opacity:0;transition:opacity .14s;box-shadow:0 8px 28px rgba(0,0,0,.5);';
+document.body.appendChild(hcard);
+let hcT;
+setTimeout(() => {
+  APPS.forEach((a, i) => {
+    const el = document.getElementById('n' + i); if(!el) return;
+    el.addEventListener('mouseenter', e => {
+      hcT = setTimeout(() => {
+        hcard.innerHTML = `<div style="font-size:10px;font-weight:800;color:${a.c};margin-bottom:2px">${a.n}</div><div style="font-family:DM Mono,monospace;font-size:6.5px;letter-spacing:.1em;text-transform:uppercase;padding:1px 5px;border:1px solid ${a.agentColor};color:${a.agentColor};display:inline-block;margin-bottom:6px">${a.agent}</div><div style="font-family:DM Mono,monospace;font-size:7.5px;color:var(--sub);line-height:1.5;margin-bottom:5px">${a.desc.slice(0,80)}...</div><div style="height:2px;background:var(--dim);border-radius:1px;overflow:hidden"><div style="height:100%;width:${a.s==='live'?100:65}%;background:${a.c};border-radius:1px"></div></div>`;
+        hcard.style.left = Math.min(e.clientX + 12, window.innerWidth - 205) + 'px';
+        hcard.style.top = Math.min(e.clientY - 20, window.innerHeight - 160) + 'px';
+        hcard.style.opacity = '1';
+      }, 350);
+    });
+    el.addEventListener('mousemove', e => {
+      if(hcard.style.opacity === '1') {
+        hcard.style.left = Math.min(e.clientX + 12, window.innerWidth - 205) + 'px';
+        hcard.style.top = Math.min(e.clientY - 20, window.innerHeight - 160) + 'px';
+      }
+    });
+    el.addEventListener('mouseleave', () => { clearTimeout(hcT); hcard.style.opacity = '0'; });
+  });
+}, 600);
+</script>
+</body>
+</html>
