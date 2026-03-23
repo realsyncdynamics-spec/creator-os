@@ -1,17 +1,14 @@
 // app/layout.tsx
 import type { Metadata } from 'next';
+import type { ReactNode } from 'react';
 import '../styles/RealSyncAppHub.css';
 
 export const metadata: Metadata = {
   title: 'RealSync Creator OS',
-  description: 'Die vollstaendige Infrastruktur fuer Creator - Verifikation, Monetarisierung, Automation und mehr.',
+  description: 'Die vollstaendige Infrastruktur fuer Creator.',
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="de">
       <head>
@@ -25,7 +22,6 @@ export default function RootLayout({
           background: '#05060f',
           color: '#fff',
           fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
-          WebkitFontSmoothing: 'antialiased',
         }}
       >
         {children}
