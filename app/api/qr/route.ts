@@ -1,5 +1,5 @@
 // app/api/qr/route.ts
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import QRCode from 'qrcode';
 
 export async function GET(req: NextRequest) {
@@ -8,24 +8,36 @@ export async function GET(req: NextRequest) {
   const format = searchParams.get('format') ?? 'svg';
 
   if (!url) {
-    return NextResponse.json({ error: 'Missing url param' }, { status: 400 });
+    return new Response(JSON.stringify({ error: 'Missing url param' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 
   try { new URL(url); } catch {
-    return NextResponse.json({ error: 'Invalid URL' }, { status: 400 });
+    return new Response(JSON.stringify({ error: 'Invalid URL' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 
   const cache = 'public, max-age=86400, stale-while-revalidate=3600';
 
   if (format === 'png') {
-    // toBuffer gibt Node Buffer zurueck - als Uint8Array an NextResponse uebergeben
-    const nodeBuffer = await QRCode.toBuffer(url, {
+    // Use Web Streams API - compatible with Next.js Edge/Node runtime
+    const dataUrl = await QRCode.toDataURL(url, {
       errorCorrectionLevel: 'M',
       margin: 1,
       scale: 6,
     });
-    const uint8 = new Uint8Array(nodeBuffer.buffer, nodeBuffer.byteOffset, nodeBuffer.byteLength);
-    return new NextResponse(uint8, {
+    // dataUrl = "data:image/png;base64,..."
+    const base64 = dataUrl.split(',')[1];
+    const binaryStr = atob(base64);
+    const bytes = new Uint8Array(binaryStr.length);
+    for (let i = 0; i < binaryStr.length; i++) {
+      bytes[i] = binaryStr.charCodeAt(i);
+    }
+    return new Response(bytes.buffer, {
       headers: {
         'Content-Type': 'image/png',
         'Content-Disposition': 'attachment; filename="qr.png"',
@@ -40,7 +52,7 @@ export async function GET(req: NextRequest) {
     margin: 1,
   });
 
-  return new NextResponse(svg, {
+  return new Response(svg, {
     headers: {
       'Content-Type': 'image/svg+xml',
       'Cache-Control': cache,
