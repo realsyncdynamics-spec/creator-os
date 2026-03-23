@@ -1,3 +1,4 @@
+'use client';
 // components/RealSyncAppHub.tsx
 import React, { useState } from "react";
 import "../styles/RealSyncAppHub.css";
