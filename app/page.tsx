@@ -1,5 +1,4 @@
 // app/page.tsx
-// RealSync Creator OS - Hauptseite
 import RealSyncAppHub from '../components/RealSyncAppHub';
 
 export default function HomePage() {
