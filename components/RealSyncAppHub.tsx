@@ -1,5 +1,4 @@
 'use client';
-// components/RealSyncAppHub.tsx
 import React, { useState } from "react";
 import "../styles/RealSyncAppHub.css";
 
@@ -9,6 +8,7 @@ interface App {
   claim: string;
   description: string;
   icon: string;
+  url: string;
 }
 
 interface Message {
@@ -16,22 +16,24 @@ interface Message {
   text: string;
 }
 
+const DOMAIN = 'realsyncdynamics.com';
+
 const apps: App[] = [
-  { name: "RealSync Optimus", slug: "optimus", claim: "Digitale Echtheit mit einem Klick", description: "KI-gestützte Verifikation deiner Inhalte.", icon: "🔐" },
-  { name: "RealSync Studio", slug: "studio", claim: "Vom Rohschnitt zum Release", description: "Dein All-in-One Editing-Studio.", icon: "🎬" },
-  { name: "RealSync Automate", slug: "automate", claim: "Deine Marketing-Pipeline auf Autopilot", description: "Automatisierte Workflows für Creator.", icon: "⚡" },
-  { name: "RealSync Deepfake Guard", slug: "deepfake-guard", claim: "Deepfakes stoppen, Vertrauen stärken", description: "KI-Detektion für manipulierte Medien.", icon: "🛡️" },
-  { name: "RealSync Chain", slug: "chain", claim: "Urheberrecht, das sich selbst beweist", description: "Blockchain-Zertifikate für deine Werke.", icon: "⛓️" },
-  { name: "RealSync Analytics", slug: "analytics", claim: "Alle Zahlen. Ein Dashboard.", description: "Creator-Performance auf einen Blick.", icon: "📊" },
-  { name: "RealSync Design", slug: "design", claim: "Thumbnails, die klicken", description: "KI-Design für maximale CTR.", icon: "🎨" },
-  { name: "RealSync Monetize", slug: "monetize", claim: "Mehr Umsatz, weniger Chaos", description: "Monetarisierung leicht gemacht.", icon: "💰" },
-  { name: "RealSync Outreach", slug: "outreach", claim: "Die richtige Brand zur richtigen Zeit", description: "Automatisiertes Brand-Partnering.", icon: "🤝" },
-  { name: "RealSync Clips", slug: "clips", claim: "Shorts die viral gehen", description: "Auto-Clip-Generator aus Longform.", icon: "✂️" },
-  { name: "RealSync Mobile", slug: "mobile", claim: "Creator-Power in deiner Tasche", description: "Vollständige Mobile-App für unterwegs.", icon: "📱" },
-  { name: "RealSync Audio", slug: "audio", claim: "Sound der überzeugt", description: "KI-Audiomaster für Podcasts & Videos.", icon: "🎵" },
-  { name: "RealSync Planner", slug: "planner", claim: "Nie wieder Content-Lücken", description: "Intelligenter Content-Kalender.", icon: "📅" },
-  { name: "RealSync Connect", slug: "connect", claim: "Deine Community, deine Regeln", description: "Community-Hub für Creator.", icon: "🌐" },
-  { name: "RealSync Sites", slug: "sites", claim: "Deine Creator-Website in Minuten", description: "KI-Website-Builder für Creator.", icon: "🌍" },
+  { name: "RealSync Optimus", slug: "optimus", claim: "Digitale Echtheit mit einem Klick", description: "KI-gest\u00fctzte Verifikation deiner Inhalte.", icon: "\ud83d\udd10", url: 'https://optimus.' + DOMAIN },
+  { name: "RealSync Studio", slug: "studio", claim: "Vom Rohschnitt zum Release", description: "Dein All-in-One Editing-Studio.", icon: "\ud83c\udfac", url: 'https://studio.' + DOMAIN },
+  { name: "RealSync Automate", slug: "automate", claim: "Deine Marketing-Pipeline auf Autopilot", description: "Automatisierte Workflows f\u00fcr Creator.", icon: "\u26a1", url: 'https://automate.' + DOMAIN },
+  { name: "RealSync Deepfake Guard", slug: "deepfake-guard", claim: "Deepfakes stoppen", description: "KI-Detektion f\u00fcr manipulierte Medien.", icon: "\ud83d\udee1\ufe0f", url: 'https://deepfake-guard.' + DOMAIN },
+  { name: "RealSync Chain", slug: "chain", claim: "Urheberrecht beweist sich selbst", description: "Blockchain-Zertifikate f\u00fcr deine Werke.", icon: "\u26d3\ufe0f", url: 'https://chain.' + DOMAIN },
+  { name: "RealSync Analytics", slug: "analytics", claim: "Alle Zahlen. Ein Dashboard.", description: "Creator-Performance auf einen Blick.", icon: "\ud83d\udcca", url: 'https://analytics.' + DOMAIN },
+  { name: "RealSync Design", slug: "design", claim: "Thumbnails, die klicken", description: "KI-Design f\u00fcr maximale CTR.", icon: "\ud83c\udfa8", url: 'https://design.' + DOMAIN },
+  { name: "RealSync Monetize", slug: "monetize", claim: "Mehr Umsatz, weniger Chaos", description: "Monetarisierung leicht gemacht.", icon: "\ud83d\udcb0", url: 'https://monetize.' + DOMAIN },
+  { name: "RealSync Outreach", slug: "outreach", claim: "Die richtige Brand zur richtigen Zeit", description: "Automatisiertes Brand-Partnering.", icon: "\ud83e\udd1d", url: 'https://outreach.' + DOMAIN },
+  { name: "RealSync Clips", slug: "clips", claim: "Shorts die viral gehen", description: "Auto-Clip-Generator aus Longform.", icon: "\u2702\ufe0f", url: 'https://clips.' + DOMAIN },
+  { name: "RealSync Mobile", slug: "mobile", claim: "Creator-Power in deiner Tasche", description: "Mobile-App f\u00fcr unterwegs.", icon: "\ud83d\udcf1", url: 'https://mobile.' + DOMAIN },
+  { name: "RealSync Audio", slug: "audio", claim: "Sound der \u00fcberzeugt", description: "KI-Audiomaster f\u00fcr Podcasts & Videos.", icon: "\ud83c\udfb5", url: 'https://audio.' + DOMAIN },
+  { name: "RealSync Planner", slug: "planner", claim: "Nie wieder Content-L\u00fccken", description: "Intelligenter Content-Kalender.", icon: "\ud83d\udcc5", url: 'https://planner.' + DOMAIN },
+  { name: "RealSync Connect", slug: "connect", claim: "Deine Community, deine Regeln", description: "Community-Hub f\u00fcr Creator.", icon: "\ud83c\udf10", url: 'https://connect.' + DOMAIN },
+  { name: "RealSync Sites", slug: "sites", claim: "Creator-Website in Minuten", description: "KI-Website-Builder f\u00fcr Creator.", icon: "\ud83c\udf0d", url: 'https://sites.' + DOMAIN },
 ];
 
 const ORBIT_POSITIONS = [
@@ -46,7 +48,7 @@ export default function RealSyncAppHub() {
   const [activeApp, setActiveApp] = useState<App | null>(null);
   const [agentOpen, setAgentOpen] = useState<boolean>(false);
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', text: 'Hallo! Ich bin dein RealSync AI Agent. Welche App möchtest du erkunden?' }
+    { role: 'assistant', text: 'Hallo! Ich bin dein RealSync AI Agent. Welche App m\u00f6chtest du erkunden?' }
   ]);
   const [input, setInput] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -72,16 +74,12 @@ export default function RealSyncAppHub() {
         })
       });
       const data = await res.json();
-      const reply: string = (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) ? data.choices[0].message.content : 'Keine Antwort verfügbar.';
+      const reply: string = (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) ? data.choices[0].message.content : 'Keine Antwort.';
       setMessages(function(prev) { return [...prev, { role: 'assistant', text: reply }]; });
     } catch (_err) {
-      setMessages(function(prev) { return [...prev, { role: 'assistant', text: 'Verbindungsfehler. Bitte erneut versuchen.' }]; });
+      setMessages(function(prev) { return [...prev, { role: 'assistant', text: 'Verbindungsfehler.' }]; });
     }
     setLoading(false);
-  };
-
-  const handleKeyDown = function(e: React.KeyboardEvent<HTMLInputElement>): void {
-    if (e.key === 'Enter') { sendMessage(); }
   };
 
   return (
@@ -109,16 +107,19 @@ export default function RealSyncAppHub() {
           const y = Math.sin(rad) * pos.radius;
           const isActive = activeApp !== null && activeApp.slug === app.slug;
           return (
-            <button
+            <a
               key={app.slug}
               className={isActive ? 'app-node active' : 'app-node'}
               style={{ transform: 'translate(' + x + 'px, ' + y + 'px)' }}
-              onClick={function() { setActiveApp(isActive ? null : app); }}
+              href={app.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={function(e) { e.preventDefault(); setActiveApp(isActive ? null : app); }}
               aria-label={app.name}
             >
               <span className="app-node-icon">{app.icon}</span>
               <span className="app-node-name">{app.name.replace('RealSync ', '')}</span>
-            </button>
+            </a>
           );
         })}
       </div>
@@ -130,8 +131,8 @@ export default function RealSyncAppHub() {
           <p className="app-claim">{activeApp.claim}</p>
           <p className="app-desc">{activeApp.description}</p>
           <div className="app-detail-actions">
-            <a href={'/apps/' + activeApp.slug} className="btn-primary">App öffnen</a>
-            <button className="btn-secondary" onClick={function() { setActiveApp(null); }}>Schließen</button>
+            <a href={activeApp.url} target="_blank" rel="noopener noreferrer" className="btn-primary">App \u00f6ffnen</a>
+            <button className="btn-secondary" onClick={function() { setActiveApp(null); }}>Schlie\u00dfen</button>
           </div>
         </div>
       )}
@@ -139,9 +140,9 @@ export default function RealSyncAppHub() {
       {agentOpen && (
         <div className="agent-panel" role="dialog" aria-label="RealSync AI Agent">
           <div className="agent-header">
-            <span className="agent-logo">🤖</span>
+            <span className="agent-logo">\ud83e\udd16</span>
             <span>RealSync AI Agent</span>
-            <button className="agent-close" onClick={function() { setAgentOpen(false); }} aria-label="Schließen">✕</button>
+            <button className="agent-close" onClick={function() { setAgentOpen(false); }}>\u2715</button>
           </div>
           <div className="agent-messages">
             {messages.map(function(m, i) {
@@ -158,11 +159,10 @@ export default function RealSyncAppHub() {
               className="agent-input"
               value={input}
               onChange={function(e) { setInput(e.target.value); }}
-              onKeyDown={handleKeyDown}
+              onKeyDown={function(e: React.KeyboardEvent<HTMLInputElement>) { if (e.key === 'Enter') { sendMessage(); } }}
               placeholder="Frag den AI Agent..."
-              aria-label="Nachricht eingeben"
             />
-            <button className="agent-send" onClick={sendMessage} aria-label="Senden">➤</button>
+            <button className="agent-send" onClick={sendMessage}>\u27a4</button>
           </div>
         </div>
       )}
