@@ -1,0 +1,204 @@
+/* =============================================
+   RealSyncAppHub - Circular App Hub Layout
+   ============================================= */
+
+/* Container */
+.rsd-app-hub {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 4rem 0;
+  overflow: visible;
+}
+
+.rsd-app-hub-inner {
+  position: relative;
+  width: 520px;
+  height: 520px;
+  max-width: 90vw;
+  max-height: 90vw;
+  margin: 0 auto;
+}
+
+/* ---- Center Button ---- */
+.rsd-center-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 190px;
+  height: 190px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 30%, #ffffff 0%, #f3f4ff 40%, #2424ff 100%);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+  color: #0b0b1a;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1.5rem;
+  cursor: pointer;
+  z-index: 10;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.rsd-center-button:hover {
+  transform: translate(-50%, -50%) scale(1.05);
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.3);
+}
+
+.rsd-center-logo span {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #0b0b1a;
+}
+
+.rsd-center-text {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #0b0b1a;
+  opacity: 0.85;
+}
+
+/* ---- App Buttons (outer ring) ---- */
+.rsd-app-button {
+  position: absolute;
+  width: 140px;
+  height: 60px;
+  border-radius: 999px;
+  background: #0b0b1a;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 500;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0.5rem 0.8rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+  overflow: visible;
+  z-index: 5;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.rsd-app-button:hover {
+  background: #2424ff;
+  box-shadow: 0 14px 32px rgba(36, 36, 255, 0.45);
+  z-index: 20;
+}
+
+.rsd-app-name {
+  pointer-events: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+}
+
+/* ---- Hover Overlay ---- */
+.rsd-app-overlay {
+  position: absolute;
+  bottom: 72px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 220px;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+  transform-origin: bottom center;
+}
+
+.rsd-app-overlay-inner {
+  background: rgba(6, 8, 24, 0.96);
+  border-radius: 12px;
+  padding: 0.75rem 0.9rem;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(116, 145, 255, 0.65);
+  backdrop-filter: blur(10px);
+  position: relative;
+}
+
+.rsd-app-overlay-inner::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -8px;
+  transform: translateX(-50%);
+  border-width: 8px 8px 0 8px;
+  border-style: solid;
+  border-color: rgba(6, 8, 24, 0.96) transparent transparent transparent;
+}
+
+.rsd-app-claim {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #e0e4ff;
+  margin-bottom: 0.3rem;
+}
+
+.rsd-app-description {
+  font-size: 0.68rem;
+  line-height: 1.4;
+  color: #c3c8f5;
+}
+
+.rsd-app-button:hover .rsd-app-overlay {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(-4px);
+}
+
+/* ---- Fallback: kein CSS-trig-Support ---- */
+@supports not (transform: translate(calc(200px * cos(0deg)))) {
+  .rsd-app-hub-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    height: auto;
+    width: auto;
+  }
+  .rsd-center-button {
+    position: static;
+    transform: none;
+    margin-bottom: 1.5rem;
+    flex: 0 0 100%;
+  }
+  .rsd-app-button {
+    position: static;
+  }
+}
+
+/* ---- Responsive Mobile ---- */
+@media (max-width: 640px) {
+  .rsd-app-hub-inner {
+    width: 360px;
+    height: 360px;
+  }
+  .rsd-center-button {
+    width: 140px;
+    height: 140px;
+    padding: 1rem;
+  }
+  .rsd-center-logo span {
+    font-size: 0.8rem;
+  }
+  .rsd-app-button {
+    width: 110px;
+    height: 50px;
+    font-size: 0.65rem;
+  }
+  .rsd-app-overlay {
+    width: 180px;
+    bottom: 58px;
+  }
+}
