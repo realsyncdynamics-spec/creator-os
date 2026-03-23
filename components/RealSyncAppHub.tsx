@@ -2,7 +2,20 @@
 import React, { useState } from "react";
 import "../styles/RealSyncAppHub.css";
 
-const apps = [
+interface App {
+  name: string;
+  slug: string;
+  claim: string;
+  description: string;
+  icon: string;
+}
+
+interface Message {
+  role: 'user' | 'assistant';
+  text: string;
+}
+
+const apps: App[] = [
   { name: "RealSync Optimus", slug: "optimus", claim: "Digitale Echtheit mit einem Klick", description: "KI-gestützte Verifikation deiner Inhalte.", icon: "🔐" },
   { name: "RealSync Studio", slug: "studio", claim: "Vom Rohschnitt zum Release", description: "Dein All-in-One Editing-Studio.", icon: "🎬" },
   { name: "RealSync Automate", slug: "automate", claim: "Deine Marketing-Pipeline auf Autopilot", description: "Automatisierte Workflows für Creator.", icon: "⚡" },
@@ -28,21 +41,20 @@ const ORBIT_POSITIONS = [
   { angle: 300, radius: 340 }, { angle: 330, radius: 300 }, { angle: 350, radius: 320 },
 ];
 
-type Message = { role: 'user' | 'assistant'; text: string };
-
 export default function RealSyncAppHub() {
-  const [activeApp, setActiveApp] = useState<typeof apps[0] | null>(null);
-  const [agentOpen, setAgentOpen] = useState(false);
+  const [activeApp, setActiveApp] = useState<App | null>(null);
+  const [agentOpen, setAgentOpen] = useState<boolean>(false);
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', text: 'Hallo! Ich bin dein RealSync AI Agent. Welche App möchtest du erkunden oder womit kann ich dir helfen?' }
+    { role: 'assistant', text: 'Hallo! Ich bin dein RealSync AI Agent. Welche App möchtest du erkunden?' }
   ]);
-  const [input, setInput] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [input, setInput] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const sendMessage = async () => {
+  const sendMessage = async (): Promise<void> => {
     if (!input.trim()) return;
     const userMsg: Message = { role: 'user', text: input };
-    setMessages(prev => [...prev, userMsg]);
+    setMessages(function(prev) { return [...prev, userMsg]; });
+    const currentInput = input;
     setInput('');
     setLoading(true);
     try {
@@ -52,26 +64,29 @@ export default function RealSyncAppHub() {
         body: JSON.stringify({
           model: 'sonar',
           messages: [
-            { role: 'system', content: 'Du bist der RealSync AI Agent. Du hilfst Creatorn, die RealSync Creator OS Apps zu nutzen. Antworte auf Deutsch, kurz und hilfreich.' },
-            ...messages.map(m => ({ role: m.role, content: m.text })),
-            { role: 'user', content: input }
+            { role: 'system', content: 'Du bist der RealSync AI Agent. Antworte auf Deutsch, kurz und hilfreich.' },
+            ...messages.map(function(m) { return { role: m.role, content: m.text }; }),
+            { role: 'user', content: currentInput }
           ]
         })
       });
       const data = await res.json();
-      const reply = data.choices?.[0]?.message?.content || 'Ich konnte keine Antwort generieren.';
-      setMessages(prev => [...prev, { role: 'assistant', text: reply }]);
-    } catch {
-      setMessages(prev => [...prev, { role: 'assistant', text: 'Verbindungsfehler. Bitte versuche es erneut.' }]);
+      const reply: string = (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) ? data.choices[0].message.content : 'Keine Antwort verfügbar.';
+      setMessages(function(prev) { return [...prev, { role: 'assistant', text: reply }]; });
+    } catch (_err) {
+      setMessages(function(prev) { return [...prev, { role: 'assistant', text: 'Verbindungsfehler. Bitte erneut versuchen.' }]; });
     }
     setLoading(false);
+  };
+
+  const handleKeyDown = function(e: React.KeyboardEvent<HTMLInputElement>): void {
+    if (e.key === 'Enter') { sendMessage(); }
   };
 
   return (
     <div className="hub-wrapper">
       <div className="hub-container">
-        {/* Stargate Eye Center */}
-        <div className="stargate-center" onClick={() => setAgentOpen(true)} title="RealSync AI Agent öffnen">
+        <div className="stargate-center" onClick={function() { setAgentOpen(true); }} title="RealSync AI Agent">
           <div className="stargate-ring ring-1"></div>
           <div className="stargate-ring ring-2"></div>
           <div className="stargate-ring ring-3"></div>
@@ -86,18 +101,18 @@ export default function RealSyncAppHub() {
           <div className="stargate-label">AI Agent</div>
         </div>
 
-        {/* App Nodes */}
-        {apps.map((app, i) => {
+        {apps.map(function(app, i) {
           const pos = ORBIT_POSITIONS[i % ORBIT_POSITIONS.length];
           const rad = (pos.angle * Math.PI) / 180;
           const x = Math.cos(rad) * pos.radius;
           const y = Math.sin(rad) * pos.radius;
+          const isActive = activeApp !== null && activeApp.slug === app.slug;
           return (
             <button
               key={app.slug}
-              className={`app-node ${activeApp?.slug === app.slug ? 'active' : ''}`}
-              style={{ transform: `translate(${x}px, ${y}px)` }}
-              onClick={() => setActiveApp(activeApp?.slug === app.slug ? null : app)}
+              className={isActive ? 'app-node active' : 'app-node'}
+              style={{ transform: 'translate(' + x + 'px, ' + y + 'px)' }}
+              onClick={function() { setActiveApp(isActive ? null : app); }}
               aria-label={app.name}
             >
               <span className="app-node-icon">{app.icon}</span>
@@ -107,42 +122,42 @@ export default function RealSyncAppHub() {
         })}
       </div>
 
-      {/* App Detail Card */}
-      {activeApp && (
+      {activeApp !== null && (
         <div className="app-detail-card">
           <span className="app-detail-icon">{activeApp.icon}</span>
           <h2>{activeApp.name}</h2>
           <p className="app-claim">{activeApp.claim}</p>
           <p className="app-desc">{activeApp.description}</p>
           <div className="app-detail-actions">
-            <a href={`/apps/${activeApp.slug}`} className="btn-primary">App öffnen</a>
-            <button className="btn-secondary" onClick={() => setActiveApp(null)}>Schließen</button>
+            <a href={'/apps/' + activeApp.slug} className="btn-primary">App öffnen</a>
+            <button className="btn-secondary" onClick={function() { setActiveApp(null); }}>Schließen</button>
           </div>
         </div>
       )}
 
-      {/* Perplexity AI Agent Chat */}
       {agentOpen && (
         <div className="agent-panel" role="dialog" aria-label="RealSync AI Agent">
           <div className="agent-header">
             <span className="agent-logo">🤖</span>
             <span>RealSync AI Agent</span>
-            <button className="agent-close" onClick={() => setAgentOpen(false)} aria-label="Schließen">✕</button>
+            <button className="agent-close" onClick={function() { setAgentOpen(false); }} aria-label="Schließen">✕</button>
           </div>
           <div className="agent-messages">
-            {messages.map((m, i) => (
-              <div key={i} className={`agent-msg ${m.role}`}>
-                <span>{m.text}</span>
-              </div>
-            ))}
+            {messages.map(function(m, i) {
+              return (
+                <div key={i} className={'agent-msg ' + m.role}>
+                  <span>{m.text}</span>
+                </div>
+              );
+            })}
             {loading && <div className="agent-msg assistant"><span>...</span></div>}
           </div>
           <div className="agent-input-row">
             <input
               className="agent-input"
               value={input}
-              onChange={e => setInput(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && sendMessage()}
+              onChange={function(e) { setInput(e.target.value); }}
+              onKeyDown={handleKeyDown}
               placeholder="Frag den AI Agent..."
               aria-label="Nachricht eingeben"
             />
