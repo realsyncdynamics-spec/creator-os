@@ -4,8 +4,33 @@ import type { ReactNode } from 'react';
 import '../styles/RealSyncAppHub.css';
 
 export const metadata: Metadata = {
-  title: 'RealSync Creator OS',
-  description: 'Die vollstaendige Infrastruktur fuer Creator.',
+  title: 'RealSync Dynamics — The Creator OS',
+  description: 'Kryptografische Content-Verifikation, KI-Automation und Creator-Tools in einer Plattform. Ed25519-Signaturen, C2PA 2.3, Deepfake-Erkennung und Blockchain-Timestamping. Made in Germany.',
+  openGraph: {
+    title: 'RealSync Dynamics — The Creator OS',
+    description: 'Kryptografische Content-Verifikation, KI-Automation und Creator-Tools in einer Plattform. Made in Germany.',
+    url: 'https://www.realsyncdynamics.de',
+    siteName: 'RealSync Dynamics',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'RealSync Dynamics — The Creator OS',
+      },
+    ],
+    locale: 'de_DE',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'RealSync Dynamics — The Creator OS',
+    description: 'Kryptografische Content-Verifikation, KI-Automation und Creator-Tools. Made in Germany.',
+    images: ['/og-image.png'],
+  },
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
