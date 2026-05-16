@@ -25,20 +25,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="de">
       <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@300;400;500&display=swap"
+          rel="stylesheet"
+        />
       </head>
-      <body
-        style={{
-          margin: 0,
-          padding: 0,
-          background: '#05060f',
-          color: '#fff',
-          fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
-        }}
-      >
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
