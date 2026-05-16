@@ -2,6 +2,8 @@
 import { NextRequest } from 'next/server';
 import QRCode from 'qrcode';
 
+export const runtime = 'nodejs';
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const url = searchParams.get('url');
@@ -24,7 +26,6 @@ export async function GET(req: NextRequest) {
   const cache = 'public, max-age=86400, stale-while-revalidate=3600';
 
   if (format === 'png') {
-    // Use Web Streams API - compatible with Next.js Edge/Node runtime
     const dataUrl = await QRCode.toDataURL(url, {
       errorCorrectionLevel: 'M',
       margin: 1,

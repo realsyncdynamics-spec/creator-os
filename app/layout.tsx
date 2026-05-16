@@ -11,14 +11,6 @@ export const metadata: Metadata = {
     description: 'Kryptografische Content-Verifikation, KI-Automation und Creator-Tools in einer Plattform. Made in Germany.',
     url: 'https://www.realsyncdynamics.de',
     siteName: 'RealSync Dynamics',
-    images: [
-      {
-        url: '/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: 'RealSync Dynamics — The Creator OS',
-      },
-    ],
     locale: 'de_DE',
     type: 'website',
   },
@@ -26,10 +18,6 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'RealSync Dynamics — The Creator OS',
     description: 'Kryptografische Content-Verifikation, KI-Automation und Creator-Tools. Made in Germany.',
-    images: ['/og-image.png'],
-  },
-  icons: {
-    icon: '/favicon.ico',
   },
 };
 
