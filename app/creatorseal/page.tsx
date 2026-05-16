@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'CreatorSeal - Content-Verifikation',
     description: 'C2PA 2.3, Ed25519-Signaturen, Deepfake-Erkennung. Made in Germany.',
-    url: 'https://www.realsyncdynamics.de/CreatorSeal',
+    url: 'https://www.realsyncdynamics.de/creatorseal',
     siteName: 'RealSync Dynamics',
     locale: 'de_DE',
     type: 'website',
